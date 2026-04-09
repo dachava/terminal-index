@@ -1,0 +1,185 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TagList from '../../components/TagList.astro';
+import RetroWindow from '../../components/RetroWindow.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map(project => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+
+const statusLabels = {
+  active:    'active',
+  completed: 'completed',
+  archived:  'archived',
+};
+---
+
+<BaseLayout
+  title={project.data.title}
+  description={project.data.description}
+>
+  <article class="project-page container">
+    <header class="project-header">
+      <div class="project-breadcrumb">
+        <a href="/projects">← projects</a>
+        <span aria-hidden="true"> / </span>
+        <span>{project.data.title}</span>
+      </div>
+
+      <div class="project-meta-row">
+        <span class={`badge badge-${project.data.status}`}>
+          {statusLabels[project.data.status]}
+        </span>
+        {project.data.featured && (
+          <span class="badge" style="background:rgba(255,170,0,.15);color:var(--color-amber);border-color:var(--color-amber-dim)">
+            ★ featured
+          </span>
+        )}
+        <time datetime={project.data.startDate.toISOString()} class="project-date">
+          since {project.data.startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}
+        </time>
+      </div>
+
+      <h1 class="project-title">{project.data.title}</h1>
+      <p class="project-description">{project.data.description}</p>
+
+      <div class="project-tech">
+        <span class="tech-label">// stack</span>
+        <TagList tags={project.data.techStack} />
+      </div>
+
+      <div class="project-actions">
+        {project.data.repoUrl && (
+          <a href={project.data.repoUrl} class="btn" target="_blank" rel="noopener noreferrer">
+            [src] view source
+          </a>
+        )}
+        {project.data.liveUrl && (
+          <a href={project.data.liveUrl} class="btn btn-magenta" target="_blank" rel="noopener noreferrer">
+            [live] open demo
+          </a>
+        )}
+      </div>
+    </header>
+
+    {project.data.heroImage && (
+      <div class="project-hero">
+        <img src={project.data.heroImage} alt={project.data.title} class="hero-image" />
+      </div>
+    )}
+
+    <div class="project-content">
+      <RetroWindow title={`${project.id}.md`}>
+        <div class="prose">
+          <Content />
+        </div>
+      </RetroWindow>
+    </div>
+
+    <div class="project-footer">
+      <a href="/projects" class="btn">← back to projects</a>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .project-page {
+    padding: var(--space-12) 0 var(--space-16);
+    max-width: 860px;
+  }
+
+  .project-breadcrumb {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-6);
+  }
+
+  .project-breadcrumb a { color: var(--color-magenta); text-decoration: none; }
+  .project-breadcrumb a:hover { text-decoration: underline; }
+
+  .project-meta-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  .project-date {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-dim);
+  }
+
+  .project-title {
+    font-size: var(--text-4xl);
+    margin-bottom: var(--space-4);
+    line-height: 1.15;
+  }
+
+  .project-description {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin-bottom: var(--space-6);
+    max-width: 60ch;
+  }
+
+  .project-tech {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+
+  .tech-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-dim);
+    white-space: nowrap;
+  }
+
+  .project-actions {
+    display: flex;
+    gap: var(--space-3);
+    margin-bottom: var(--space-8);
+    flex-wrap: wrap;
+  }
+
+  .project-hero {
+    margin-bottom: var(--space-8);
+  }
+
+  .hero-image {
+    width: 100%;
+    border: 1px solid var(--color-border-bright);
+    border-radius: var(--radius-sm);
+  }
+
+  .project-content {
+    margin-bottom: var(--space-12);
+  }
+
+  .project-content .prose {
+    font-size: var(--text-base);
+    line-height: 1.8;
+  }
+
+  .project-footer {
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--color-border);
+  }
+
+  @media (max-width: 640px) {
+    .project-title { font-size: var(--text-2xl); }
+  }
+</style>

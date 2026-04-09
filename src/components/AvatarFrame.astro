@@ -1,0 +1,212 @@
+---
+interface Props {
+  src?: string;       // dark-mode image (or only image)
+  lightSrc?: string;  // light-mode image; falls back to src if omitted
+  alt?: string;
+  size?: number;      // px, default 160
+}
+
+const { src, lightSrc, alt = 'Avatar', size = 160 } = Astro.props;
+
+// Pixel grid for the default mascot — 0 = empty, 1-5 = color index
+// 18×22 sprite: a little terminal robot
+const palette = [
+  'transparent',  // 0 — empty
+  '#00ff41',      // 1 — primary (cyan in ICE, green in HCKR)
+  '#0a120a',      // 2 — dark fill
+  '#bf5fff',      // 3 — accent (magenta/purple)
+  '#ffe000',      // 4 — amber/yellow
+  '#c8f0c0',      // 5 — light (text color)
+];
+
+const grid: number[][] = [
+  [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0],
+  [0,0,0,0,1,2,2,2,2,2,2,1,0,0,0,0],
+  [0,0,0,1,2,2,1,2,2,1,2,2,1,0,0,0],
+  [0,0,0,1,2,1,4,1,2,1,4,1,2,1,0,0], // antenna pip row
+  [0,0,0,1,2,2,1,2,2,1,2,2,1,0,0,0],
+  [0,0,1,2,2,2,2,2,2,2,2,2,2,2,1,0],
+  [0,1,2,2,2,2,2,2,2,2,2,2,2,2,2,1],
+  [0,1,2,2,3,3,2,2,2,2,3,3,2,2,2,1], // eyes
+  [0,1,2,2,3,3,2,2,2,2,3,3,2,2,2,1],
+  [0,1,2,2,2,2,2,2,2,2,2,2,2,2,2,1],
+  [0,1,2,2,2,1,1,1,1,1,1,2,2,2,2,1], // mouth
+  [0,1,2,2,2,2,2,2,2,2,2,2,2,2,2,1],
+  [0,0,1,2,2,2,2,2,2,2,2,2,2,2,1,0],
+  [0,0,0,1,1,2,2,2,2,2,2,1,1,0,0,0], // neck
+  [0,0,1,2,2,1,2,2,2,2,1,2,2,1,0,0], // shoulders
+  [0,1,2,2,2,1,2,2,2,2,1,2,2,2,1,0],
+  [0,1,2,2,2,1,2,2,2,2,1,2,2,2,1,0], // body
+  [0,1,2,2,2,1,2,2,2,2,1,2,2,2,1,0],
+  [0,0,1,1,1,1,2,2,2,2,1,1,1,1,0,0],
+  [0,0,1,2,1,0,1,2,2,1,0,1,2,1,0,0], // legs
+  [0,0,1,2,1,0,1,2,2,1,0,1,2,1,0,0],
+  [0,0,1,1,1,0,1,1,1,1,0,1,1,1,0,0], // feet
+];
+
+const cols = grid[0].length;
+const rows = grid.length;
+const cellSize = Math.floor(size / cols);
+const svgW = cols * cellSize;
+const svgH = rows * cellSize;
+---
+
+<div class="avatar-frame" style={`width:${svgW}px`}>
+  <!-- Pixel-art frame corners -->
+  <div class="frame-corners" aria-hidden="true">
+    <span class="corner tl"></span>
+    <span class="corner tr"></span>
+    <span class="corner bl"></span>
+    <span class="corner br"></span>
+  </div>
+
+  {src ? (
+    <!-- Real image slot — separate elements for dark/light so CSS can toggle -->
+    <div class="avatar-img-wrap" style={`width:${svgW}px;height:${svgH}px`}>
+      <img src={src}                   alt={alt} width={svgW} height={svgH} class="avatar-img avatar-img-dark" />
+      {lightSrc && (
+        <img src={lightSrc} alt={alt} width={svgW} height={svgH} class="avatar-img avatar-img-light" />
+      )}
+    </div>
+  ) : (
+    <!-- Default SVG mascot -->
+    <svg
+      width={svgW}
+      height={svgH}
+      viewBox={`0 0 ${svgW} ${svgH}`}
+      xmlns="http://www.w3.org/2000/svg"
+      aria-label="Terminal robot mascot"
+      role="img"
+      class="avatar-svg"
+      shape-rendering="crispEdges"
+    >
+      {grid.flatMap((row, r) =>
+        row.map((colorIdx, c) =>
+          colorIdx !== 0 ? (
+            <rect
+              x={c * cellSize}
+              y={r * cellSize}
+              width={cellSize}
+              height={cellSize}
+              fill={palette[colorIdx]}
+              class={colorIdx === 1 ? 'px-primary' :
+                     colorIdx === 3 ? 'px-accent' :
+                     colorIdx === 4 ? 'px-amber' :
+                     colorIdx === 5 ? 'px-light' : ''}
+            />
+          ) : null
+        )
+      )}
+    </svg>
+  )}
+
+  <!-- Status indicator -->
+  <div class="avatar-status" aria-hidden="true">
+    <span class="status-pip"></span>
+    <span class="status-text">online</span>
+  </div>
+</div>
+
+<style>
+  .avatar-frame {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  /* Pixel-art corner brackets */
+  .frame-corners {
+    position: absolute;
+    inset: -6px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .corner {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-color: var(--color-cyan);
+    border-style: solid;
+    opacity: 0.7;
+  }
+
+  .corner.tl { top: 0; left: 0;  border-width: 2px 0 0 2px; }
+  .corner.tr { top: 0; right: 0; border-width: 2px 2px 0 0; }
+  .corner.bl { bottom: 0; left: 0;  border-width: 0 0 2px 2px; }
+  .corner.br { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
+
+  /* SVG pixel colours — overridden per theme */
+  .avatar-svg { display: block; }
+
+  .avatar-svg .px-primary { fill: var(--color-cyan); }
+  .avatar-svg .px-accent  { fill: var(--color-magenta); }
+  .avatar-svg .px-amber   { fill: var(--color-amber); }
+  .avatar-svg .px-light   { fill: var(--color-text); }
+
+  /* Real image */
+  .avatar-img-wrap {
+    overflow: hidden;
+    image-rendering: pixelated;
+    position: relative;
+  }
+
+  .avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    image-rendering: pixelated;
+  }
+
+  /* Theme switching — light variant overlaps dark via absolute positioning */
+  .avatar-img-light {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  :global([data-theme="light"]) .avatar-img-dark  { opacity: 0; }
+  :global([data-theme="light"]) .avatar-img-light { opacity: 1; }
+
+  /* Glow on the whole frame */
+  .avatar-frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.12), 0 0 40px rgba(0, 255, 65, 0.06);
+    pointer-events: none;
+  }
+
+  :global([data-theme="light"]) .avatar-frame::after {
+    box-shadow: 0 0 20px rgba(0, 87, 255, 0.1), 0 0 40px rgba(0, 87, 255, 0.05);
+  }
+
+  /* Status badge */
+  .avatar-status {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--color-text-dim);
+  }
+
+  .status-pip {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--color-lime);
+    animation: pip-pulse 2.4s ease-in-out infinite;
+  }
+
+  @keyframes pip-pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.3; }
+  }
+
+  .status-text { letter-spacing: 0.06em; }
+</style>

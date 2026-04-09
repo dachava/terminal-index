@@ -1,0 +1,86 @@
+---
+// Fake animated hit counter — counts up to a random large number on load
+---
+<div class="hit-counter" aria-label="Site visitor counter">
+  <span class="counter-label">VISITORS</span>
+  <div class="counter-digits" id="hit-counter-digits">
+    <span>0</span><span>0</span><span>0</span>
+    <span>0</span><span>0</span><span>0</span>
+  </div>
+</div>
+
+<style>
+  .hit-counter {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .counter-label {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--color-text-dim);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .counter-digits {
+    display: flex;
+    gap: 2px;
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    line-height: 1;
+  }
+
+  .counter-digits span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.4em;
+    height: 1.8em;
+    background: var(--color-surface-3);
+    border: 1px solid var(--color-border);
+    color: var(--color-lime);
+    text-shadow: var(--glow-lime);
+    border-radius: 2px;
+    transition: transform 100ms ease;
+  }
+</style>
+
+<script>
+  const el = document.getElementById('hit-counter-digits');
+  if (el) {
+    // Realistic-looking fake count — seeded from session so it feels persistent
+    const base = 847293;
+    const sessionSeed = parseInt(sessionStorage.getItem('hc') || '0') || Math.floor(Math.random() * 500);
+    sessionStorage.setItem('hc', String(sessionSeed));
+    const target = base + sessionSeed;
+
+    const digits = el.querySelectorAll('span');
+    let current = 0;
+    const duration = 1800;
+    const start = performance.now();
+
+    function update(now: number) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease out expo
+      const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+      current = Math.floor(eased * target);
+
+      const display = String(current).padStart(6, '0');
+      digits.forEach((d, i) => {
+        if (d.textContent !== display[i]) {
+          d.textContent = display[i];
+          d.style.transform = 'translateY(-2px)';
+          setTimeout(() => { d.style.transform = ''; }, 80);
+        }
+      });
+
+      if (progress < 1) requestAnimationFrame(update);
+    }
+
+    requestAnimationFrame(update);
+  }
+</script>

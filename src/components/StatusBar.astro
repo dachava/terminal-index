@@ -1,0 +1,164 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+
+const pathname = Astro.url.pathname;
+
+// Derive a short readable label from the path
+function pathLabel(p: string): string {
+  if (p === '/') return '~/home';
+  const seg = p.replace(/\/$/, '').split('/').filter(Boolean);
+  return '~/' + seg.join('/');
+}
+
+const currentPath = pathLabel(pathname);
+---
+
+<div class="status-bar" role="complementary" aria-label="Site status bar">
+  <!-- Left: window dots + site name -->
+  <div class="status-left">
+    <div class="status-dots" aria-hidden="true">
+      <span class="dot dot-close"></span>
+      <span class="dot dot-min"></span>
+      <span class="dot dot-max"></span>
+    </div>
+    <a href="/" class="status-site-name" aria-label="Home">yourname.dev</a>
+    <span class="status-sep" aria-hidden="true">·</span>
+    <span class="status-branch" aria-hidden="true">main</span>
+  </div>
+
+  <!-- Center: current path -->
+  <div class="status-center" aria-label={`Current page: ${currentPath}`}>
+    <span class="status-path" id="status-path">{currentPath}</span>
+  </div>
+
+  <!-- Right: encoding info + theme toggle -->
+  <div class="status-right">
+    <span class="status-meta" aria-hidden="true">UTF-8</span>
+    <span class="status-sep" aria-hidden="true">·</span>
+    <span class="status-meta" aria-hidden="true">astro</span>
+    <ThemeToggle />
+  </div>
+</div>
+
+<style>
+  .status-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 150;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: 0 var(--space-4);
+    background: var(--color-surface-2);
+    border-top: 1px solid var(--color-border-bright);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--color-text-dim);
+    user-select: none;
+  }
+
+  /* ── Left ── */
+  .status-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-shrink: 0;
+  }
+
+  .status-dots {
+    display: flex;
+    gap: 4px;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: block;
+  }
+
+  .dot-close { background: #ff5f57; }
+  .dot-min   { background: #febc2e; }
+  .dot-max   { background: #28c840; }
+
+  .status-site-name {
+    color: var(--color-cyan);
+    text-decoration: none;
+    font-weight: bold;
+    letter-spacing: 0.02em;
+    transition: opacity var(--transition-fast);
+  }
+
+  .status-site-name:hover {
+    opacity: 0.7;
+    text-decoration: none;
+  }
+
+  .status-branch {
+    color: var(--color-magenta);
+    opacity: 0.8;
+  }
+
+  .status-sep {
+    color: var(--color-border-bright);
+  }
+
+  /* ── Center ── */
+  .status-center {
+    flex: 1;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .status-path {
+    color: var(--color-text-muted);
+    letter-spacing: 0.03em;
+  }
+
+  /* ── Right ── */
+  .status-right {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-shrink: 0;
+  }
+
+  .status-meta {
+    color: var(--color-text-dim);
+    letter-spacing: 0.03em;
+  }
+
+  /* Override ThemeToggle to fit the status bar height */
+  .status-right :global(.theme-toggle) {
+    padding: 2px 8px;
+    font-size: 0.65rem;
+    border-color: var(--color-border);
+    height: 20px;
+  }
+
+  /* Ensure page content isn't hidden behind the bar */
+  :global(body) {
+    padding-bottom: 28px;
+  }
+
+  @media (max-width: 480px) {
+    .status-meta { display: none; }
+    .status-branch { display: none; }
+    .status-center { text-align: left; }
+  }
+</style>
+
+<script>
+  // Keep path label in sync on client-side navigation (if ever added)
+  // Also update on load in case JS-routed path differs
+  const el = document.getElementById('status-path');
+  if (el) {
+    const p = window.location.pathname;
+    const segs = p.replace(/\/$/, '').split('/').filter(Boolean);
+    el.textContent = segs.length ? '~/' + segs.join('/') : '~/home';
+  }
+</script>

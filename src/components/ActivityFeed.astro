@@ -1,0 +1,294 @@
+---
+interface Entry {
+  type: 'post' | 'project';
+  label: string;
+  path: string;
+  meta: string;       // read time or status
+  tags?: string[];
+  date: string;       // formatted
+  isoDate: string;
+}
+
+interface Props {
+  entries: Entry[];
+}
+
+const { entries } = Astro.props;
+---
+
+<section class="activity" aria-labelledby="activity-heading">
+  <!-- Command line prompt -->
+  <div class="activity-prompt" aria-hidden="true">
+    <span class="prompt-user">you</span><span class="prompt-at">@</span><span
+      class="prompt-host">yourname.dev</span><span class="prompt-sep">:</span><span
+      class="prompt-path">~</span><span class="prompt-dollar">$</span>
+    <span class="prompt-cmd">ls -lt --recent ./</span>
+    <span class="prompt-cursor blink" aria-hidden="true">▌</span>
+  </div>
+
+  <!-- Static log rows -->
+  <ol class="activity-log" aria-label="Recent activity">
+    {entries.map((entry, i) => (
+      <li
+        class="log-row"
+        style={`animation-delay: ${i * 80}ms`}
+        aria-label={`${entry.type === 'post' ? 'Blog post' : 'Project'}: ${entry.label}`}
+      >
+        <span class="log-perm" aria-hidden="true">drwxr</span>
+        <span class={`log-type log-type-${entry.type}`}>{entry.type === 'post' ? 'blog/' : 'proj/'}</span>
+        <a href={entry.path} class="log-label">{entry.label}</a>
+        <span class="log-spacer" aria-hidden="true"></span>
+        <time class="log-date" datetime={entry.isoDate}>{entry.date}</time>
+        <span class={`log-meta log-meta-${entry.type}`}>{entry.meta}</span>
+        {entry.tags && entry.tags.length > 0 && (
+          <span class="log-tags" aria-hidden="true">
+            {entry.tags.slice(0, 2).map(t => `#${t}`).join(' ')}
+          </span>
+        )}
+      </li>
+    ))}
+  </ol>
+
+  <!-- Heartbeat line — cycles through entries -->
+  <div class="heartbeat-row" aria-live="polite" aria-atomic="true">
+    <span class="hb-dot" aria-hidden="true"></span>
+    <span class="hb-label" id="hb-label" aria-label="Latest activity"></span>
+  </div>
+</section>
+
+<style>
+  .activity {
+    margin: var(--space-12) 0;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  /* ── Prompt line ── */
+  .activity-prompt {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: var(--space-3) var(--space-6);
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    flex-wrap: wrap;
+    gap: 0;
+  }
+
+  .prompt-user   { color: var(--color-lime); }
+  .prompt-at     { color: var(--color-text-dim); }
+  .prompt-host   { color: var(--color-cyan); }
+  .prompt-sep    { color: var(--color-text-dim); }
+  .prompt-path   { color: var(--color-magenta); }
+  .prompt-dollar { color: var(--color-text-dim); margin: 0 var(--space-2); }
+  .prompt-cmd    { color: var(--color-text-muted); }
+  .prompt-cursor { color: var(--color-cyan); margin-left: 4px; }
+
+  /* ── Log rows ── */
+  .activity-log {
+    list-style: none;
+    padding: var(--space-2) var(--space-6);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .log-row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    padding: 5px 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    border-bottom: 1px solid transparent;
+    opacity: 0;
+    animation: row-in 0.3s ease forwards;
+    transition: border-color var(--transition-fast);
+    overflow: hidden;
+  }
+
+  .log-row:last-child { border-bottom: none; }
+
+  .log-row:hover {
+    border-bottom-color: var(--color-border);
+  }
+
+  @keyframes row-in {
+    from { opacity: 0; transform: translateX(-6px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  .log-perm {
+    color: var(--color-text-dim);
+    flex-shrink: 0;
+    letter-spacing: 0.05em;
+  }
+
+  .log-type {
+    flex-shrink: 0;
+    font-size: var(--text-xs);
+    font-weight: bold;
+    letter-spacing: 0.04em;
+  }
+
+  .log-type-post    { color: var(--color-cyan); }
+  .log-type-project { color: var(--color-magenta); }
+
+  .log-label {
+    color: var(--color-text);
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 28ch;
+    flex-shrink: 1;
+    transition: color var(--transition-fast);
+  }
+
+  .log-label:hover {
+    color: var(--color-cyan);
+    text-decoration: none;
+  }
+
+  .log-spacer {
+    flex: 1;
+    border-bottom: 1px dotted var(--color-border);
+    margin-bottom: 4px;
+    min-width: var(--space-4);
+  }
+
+  .log-date {
+    color: var(--color-text-dim);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .log-meta {
+    flex-shrink: 0;
+    font-size: var(--text-xs);
+    padding: 1px 6px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  .log-meta-post {
+    color: var(--color-text-dim);
+  }
+
+  .log-meta-project {
+    color: var(--color-lime);
+    background: rgba(0, 255, 65, 0.06);
+    border: 1px solid rgba(0, 255, 65, 0.15);
+  }
+
+  [data-theme="light"] .log-meta-project {
+    color: var(--color-lime-dim);
+    background: rgba(0, 188, 212, 0.08);
+    border-color: rgba(0, 188, 212, 0.2);
+  }
+
+  .log-tags {
+    color: var(--color-text-dim);
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── Heartbeat row ── */
+  .heartbeat-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-6);
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    min-height: 28px;
+  }
+
+  .hb-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-lime);
+    flex-shrink: 0;
+    animation: hb-pulse 2.4s ease-in-out infinite;
+  }
+
+  @keyframes hb-pulse {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(0, 255, 65, 0.6);
+      opacity: 1;
+    }
+    50% {
+      box-shadow: 0 0 0 5px rgba(0, 255, 65, 0);
+      opacity: 0.7;
+    }
+  }
+
+  [data-theme="light"] .hb-dot {
+    background: var(--color-lime);
+    animation-name: hb-pulse-ice;
+  }
+
+  @keyframes hb-pulse-ice {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0, 188, 212, 0.5); opacity: 1; }
+    50%       { box-shadow: 0 0 0 5px rgba(0, 188, 212, 0); opacity: 0.7; }
+  }
+
+  .hb-label {
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: opacity 0.4s ease;
+  }
+
+  .hb-label.fade {
+    opacity: 0;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .log-tags  { display: none; }
+    .log-perm  { display: none; }
+    .log-label { max-width: 18ch; }
+
+    .activity-prompt,
+    .activity-log,
+    .heartbeat-row { padding-left: var(--space-4); padding-right: var(--space-4); }
+  }
+</style>
+
+<script>
+  // Heartbeat — cycles through entries with a fade transition
+  const entries: { text: string }[] = [];
+
+  document.querySelectorAll<HTMLElement>('.log-row').forEach(row => {
+    const type  = row.querySelector('.log-type')?.textContent?.trim() ?? '';
+    const label = row.querySelector('.log-label')?.textContent?.trim() ?? '';
+    const meta  = row.querySelector('.log-meta')?.textContent?.trim() ?? '';
+    const date  = row.querySelector('.log-date')?.textContent?.trim() ?? '';
+    entries.push({ text: `${type}  ${label}  ·  ${meta}  ·  ${date}` });
+  });
+
+  const hbLabel = document.getElementById('hb-label');
+  if (hbLabel && entries.length > 0) {
+    let idx = 0;
+
+    function showEntry() {
+      hbLabel!.classList.add('fade');
+      setTimeout(() => {
+        hbLabel!.textContent = entries[idx].text;
+        hbLabel!.classList.remove('fade');
+        idx = (idx + 1) % entries.length;
+      }, 400);
+    }
+
+    showEntry();
+    setInterval(showEntry, 4000);
+  }
+</script>

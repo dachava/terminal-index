@@ -1,0 +1,37 @@
+---
+interface Props {
+  tags: string[];
+  activeTag?: string;
+  linkPrefix?: string; // e.g. '/blog?tag=' to make tags clickable
+}
+
+const { tags, activeTag, linkPrefix } = Astro.props;
+---
+<ul class="tag-list" role="list">
+  {tags.map((tag) => (
+    <li>
+      {linkPrefix ? (
+        <a
+          href={`${linkPrefix}${encodeURIComponent(tag)}`}
+          class={`tag ${activeTag === tag ? 'active' : ''}`}
+          aria-current={activeTag === tag ? 'true' : undefined}
+        >
+          #{tag}
+        </a>
+      ) : (
+        <span class="tag">#{tag}</span>
+      )}
+    </li>
+  ))}
+</ul>
+
+<style>
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+</style>

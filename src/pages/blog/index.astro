@@ -1,0 +1,225 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const allTags = [...new Set(allPosts.flatMap(p => p.data.tags))].sort();
+
+function readingTime(body: string) {
+  const words = body.split(/\s+/).length;
+  return `${Math.ceil(words / 200)} min`;
+}
+---
+
+<BaseLayout
+  title="Blog"
+  description="Thoughts on web development, retro tech, tools, and building things in public."
+>
+  <div class="blog-page container">
+    <header class="page-header">
+      <div class="page-header-prefix" aria-hidden="true">$ ls ~/blog</div>
+      <h1 class="page-title">Blog</h1>
+      <p class="page-description">
+        {allPosts.length} posts on web development, retro tech, tools, and whatever else
+        is on my mind. No newsletter — subscribe via <a href="/rss.xml">RSS</a>.
+      </p>
+    </header>
+
+    <!-- Tag filter — client-side filtering -->
+    {allTags.length > 0 && (
+      <nav class="tag-filter" aria-label="Filter posts by tag" id="tag-filter">
+        <span class="tag-filter-label">filter:</span>
+        <ul class="tag-filter-list" role="list">
+          <li>
+            <button class="tag active" data-tag="" aria-pressed="true">#all</button>
+          </li>
+          {allTags.map(tag => (
+            <li>
+              <button class="tag" data-tag={tag} aria-pressed="false">#{tag}</button>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    )}
+
+    <p class="filter-status" id="filter-status" aria-live="polite" hidden></p>
+
+    <!-- Posts list — all rendered, JS hides non-matching -->
+    <div class="posts-list" role="feed" aria-label="Blog posts" id="posts-list">
+      {allPosts.map(post => (
+        <PostCard
+          title={post.data.title}
+          description={post.data.description}
+          pubDate={post.data.pubDate}
+          tags={post.data.tags}
+          slug={post.id}
+          readingTime={readingTime(post.body ?? '')}
+        />
+      ))}
+    </div>
+
+    <div class="empty-state" id="empty-state" hidden>
+      <p class="glow-cyan">$ grep -r -- no results found</p>
+      <p><button class="btn" id="clear-filter">clear filter</button></p>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  const filterEl = document.getElementById('tag-filter');
+  const statusEl = document.getElementById('filter-status');
+  const emptyEl  = document.getElementById('empty-state');
+  const list     = document.getElementById('posts-list');
+
+  if (!filterEl || !list) throw new Error('Missing elements');
+
+  // Read initial tag from URL
+  let activeTag = new URLSearchParams(window.location.search).get('tag') ?? '';
+
+  function applyFilter(tag: string) {
+    activeTag = tag;
+
+    // Update URL without reload
+    const url = new URL(window.location.href);
+    if (tag) {
+      url.searchParams.set('tag', tag);
+    } else {
+      url.searchParams.delete('tag');
+    }
+    window.history.replaceState({}, '', url.toString());
+
+    // Update button states
+    filterEl!.querySelectorAll<HTMLButtonElement>('[data-tag]').forEach(btn => {
+      const isActive = btn.dataset.tag === tag;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-pressed', String(isActive));
+    });
+
+    // Show/hide posts
+    const posts = list!.querySelectorAll<HTMLElement>('article');
+    let visible = 0;
+    posts.forEach(article => {
+      const tagContainer = article.querySelectorAll('.tag');
+      const postTags = Array.from(tagContainer).map(t => t.textContent?.replace('#', '').trim() ?? '');
+      const show = !tag || postTags.includes(tag);
+      article.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+
+    // Status
+    if (statusEl) {
+      if (tag) {
+        statusEl.textContent = `Showing ${visible} post${visible !== 1 ? 's' : ''} tagged #${tag}`;
+        statusEl.hidden = false;
+      } else {
+        statusEl.hidden = true;
+      }
+    }
+
+    // Empty state
+    if (emptyEl) emptyEl.hidden = visible > 0;
+  }
+
+  // Init
+  applyFilter(activeTag);
+
+  // Button clicks
+  filterEl.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-tag]');
+    if (btn) applyFilter(btn.dataset.tag ?? '');
+  });
+
+  // Clear from empty state
+  document.getElementById('clear-filter')?.addEventListener('click', () => applyFilter(''));
+</script>
+
+<style>
+  .blog-page {
+    padding: var(--space-12) 0 var(--space-16);
+    max-width: 780px;
+  }
+
+  .page-header { margin-bottom: var(--space-8); }
+
+  .page-header-prefix {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-dim);
+    margin-bottom: var(--space-2);
+  }
+
+  .page-title {
+    font-size: var(--text-4xl);
+    margin-bottom: var(--space-4);
+    color: var(--color-cyan);
+    text-shadow: var(--glow-cyan);
+  }
+
+  .page-description {
+    color: var(--color-text-muted);
+    font-size: var(--text-base);
+    line-height: 1.6;
+  }
+
+  .page-description a { color: var(--color-cyan); }
+
+  .tag-filter {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+    padding: var(--space-4);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+  }
+
+  .tag-filter-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-dim);
+    padding-top: 3px;
+    white-space: nowrap;
+  }
+
+  .tag-filter-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Make tag buttons look like tag links */
+  .tag-filter-list .tag {
+    border: none;
+    cursor: pointer;
+  }
+
+  .filter-status {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-6);
+  }
+
+  .posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .empty-state {
+    padding: var(--space-12);
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .empty-state p { margin-bottom: var(--space-4); }
+</style>

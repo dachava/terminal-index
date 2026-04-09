@@ -1,0 +1,22 @@
+---
+interface Props {
+  title?: string;
+  class?: string;
+  noPadding?: boolean;
+}
+
+const { title = 'window', class: className = '', noPadding = false } = Astro.props;
+---
+<div class={`window ${className}`}>
+  <div class="window-titlebar">
+    <div class="window-dots">
+      <span class="window-dot window-dot-close" aria-hidden="true"></span>
+      <span class="window-dot window-dot-min" aria-hidden="true"></span>
+      <span class="window-dot window-dot-max" aria-hidden="true"></span>
+    </div>
+    <span class="window-title">{title}</span>
+  </div>
+  <div class={noPadding ? '' : 'window-body'}>
+    <slot />
+  </div>
+</div>

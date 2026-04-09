@@ -1,0 +1,65 @@
+---
+// Dark/light mode toggle
+---
+<button
+  id="theme-toggle"
+  class="theme-toggle"
+  aria-label="Toggle CRT / hacker terminal mode"
+  title="Toggle theme"
+>
+  <span class="theme-icon" aria-hidden="true">▶</span>
+  <span class="theme-label">HCKR</span>
+</button>
+
+<style>
+  .theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: 1px solid var(--color-border-bright);
+    border-radius: 2px;
+    padding: 4px 10px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: all 150ms ease;
+    white-space: nowrap;
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--color-amber);
+    color: var(--color-amber);
+  }
+
+  .theme-icon {
+    font-size: 0.85em;
+    line-height: 1;
+  }
+</style>
+
+<script>
+  const btn = document.getElementById('theme-toggle');
+  const label = btn?.querySelector('.theme-label');
+  const icon = btn?.querySelector('.theme-icon');
+
+  function getTheme(): string {
+    return localStorage.getItem('theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  }
+
+  function applyTheme(theme: string) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    if (label) label.textContent = theme === 'dark' ? 'HCKR' : 'COLD';
+    if (icon) icon.textContent = theme === 'dark' ? '▶' : '◈';
+  }
+
+  applyTheme(getTheme());
+
+  btn?.addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme') || 'dark';
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+  });
+</script>

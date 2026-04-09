@@ -1,0 +1,122 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RetroWindow from '../components/RetroWindow.astro';
+import AvatarFrame from '../components/AvatarFrame.astro';
+import RecentWork from '../components/RecentWork.astro';
+import { getCollection } from 'astro:content';
+import '../styles/index.css';
+
+const allPosts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const allProjects = (await getCollection('projects'))
+  .sort((a, b) => b.data.startDate.valueOf() - a.data.startDate.valueOf());
+
+function readingTime(body: string) {
+  const words = body.split(/\s+/).length;
+  return `${Math.ceil(words / 200)} min read`;
+}
+
+function fmtDate(d: Date): string {
+  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+}
+
+const workEntries = [
+  ...allPosts.map(p => ({
+    type: 'post' as const,
+    label: p.data.title,
+    path: `/blog/${p.id}`,
+    description: p.data.description,
+    meta: readingTime(p.body ?? ''),
+    tags: p.data.tags.slice(0, 3),
+    date: fmtDate(p.data.pubDate),
+    isoDate: p.data.pubDate.toISOString(),
+  })),
+  ...allProjects.map(p => ({
+    type: 'project' as const,
+    label: p.data.title,
+    path: `/projects/${p.id}`,
+    description: p.data.description,
+    meta: p.data.status,
+    tags: p.data.techStack.slice(0, 3),
+    date: fmtDate(p.data.startDate),
+    isoDate: p.data.startDate.toISOString(),
+  })),
+].sort((a, b) => new Date(b.isoDate).valueOf() - new Date(a.isoDate).valueOf())
+ .slice(0, 8);
+---
+
+<BaseLayout title="Home" description="Developer, builder, retro web enthusiast. Crafting fast, accessible, deliberately styled websites.">
+
+  <!-- ── Hero ── -->
+  <section class="hero" aria-label="Introduction">
+    <div class="container hero-inner">
+      <div class="hero-avatar">
+        <AvatarFrame src="/images/avatar.png" lightSrc="/images/avatar-light.png" alt="Avatar" size={160} />
+      </div>
+
+      <div class="hero-content">
+        <p class="hero-greeting">
+          <span class="glow-cyan"></span>
+        </p>
+        <h1 class="hero-name">
+          <span class="glow-cyan">Diego</span><span class="glow-magenta">Chavarria</span>
+        </h1>
+        <p class="hero-tagline">
+          software engineer &amp; digital tourist<br />
+          <span class="hero-sub">The purpose of computing is insight, not numbers. &lt;R. Hamming&gt;</span>
+        </p>
+
+        <!-- <div class="hero-badges">
+          <span class="construction-badge" role="img" aria-label="Under construction">
+            🚧 forever under construction
+          </span>
+        </div> -->
+
+        <div class="hero-cta">
+          <a href="/projects" class="btn btn-primary">view projects →</a>
+          <a href="/blog" class="btn">read the blog</a>
+          <a href="/about" class="btn">about me</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Recent Work ── -->
+  <div class="container">
+    <RecentWork entries={workEntries} />
+  </div>
+
+  <!-- ── About teaser ── -->
+  <section class="section container teaser-section" aria-labelledby="about-heading">
+    <RetroWindow title="about.txt" class="about-teaser">
+      <div class="about-teaser-inner">
+        <div class="about-teaser-text">
+          <h2 id="about-heading" class="glow-magenta">$ cat about.txt</h2>
+          <p>
+            I'm a software engineer who writes too much CSS and not enough tests.
+            I care deeply about performance, accessibility, and the craft of building
+            things that feel good to use.
+          </p>
+          <p>
+            When I'm not pushing pixels or arguing about tab width, I'm probably
+            reading about old computers, tinkering with mechanical keyboards,
+            or playing a video game from 2003.
+          </p>
+          <a href="/about" class="btn btn-primary">read more →</a>
+        </div>
+        <div class="about-teaser-skills" aria-label="Tech skills">
+          <p class="skills-label">// skills[]</p>
+          <div class="skills-grid">
+            {['TypeScript', 'Rust', 'Astro', 'React', 'CSS', 'Node.js', 'SQL', 'Linux'].map(skill => (
+              <span class="skill-item">{skill}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </RetroWindow>
+  </section>
+
+</BaseLayout>
+

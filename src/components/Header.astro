@@ -1,0 +1,197 @@
+---
+const nav = [
+  { href: '/',          label: '~/home' },
+  { href: '/blog',      label: '~/blog' },
+  { href: '/projects',  label: '~/projects' },
+  { href: '/about',     label: '~/about' },
+  { href: '/guestbook', label: '~/guestbook' },
+];
+
+const pathname = Astro.url.pathname;
+---
+
+<header class="site-header" role="banner">
+  <nav class="header-nav container" aria-label="Main navigation">
+    <ul role="list">
+      {nav.map(({ href, label }) => {
+        const isActive = href === '/'
+          ? pathname === '/'
+          : pathname.startsWith(href);
+        return (
+          <li>
+            <a
+              href={href}
+              class={`nav-tab ${isActive ? 'active' : ''}`}
+              aria-current={isActive ? 'page' : undefined}
+            >
+              {label}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  </nav>
+</header>
+
+<!-- Mobile nav toggle — repositioned above status bar -->
+<button
+  class="mobile-nav-toggle"
+  aria-label="Toggle navigation"
+  aria-expanded="false"
+  aria-controls="mobile-nav"
+>
+  <span aria-hidden="true">≡</span>
+</button>
+
+<nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation" hidden>
+  <ul role="list">
+    {nav.map(({ href, label }) => {
+      const isActive = href === '/'
+        ? pathname === '/'
+        : pathname.startsWith(href);
+      return (
+        <li>
+          <a href={href} class={isActive ? 'active' : ''}>
+            {isActive ? '▸ ' : '  '}{label}
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+</nav>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    backdrop-filter: blur(4px);
+  }
+
+  .header-nav {
+    padding: 0 var(--space-6);
+    overflow-x: auto;
+    scrollbar-width: none;
+    max-width: var(--max-width);
+    margin: 0 auto;
+  }
+
+  .header-nav::-webkit-scrollbar { display: none; }
+
+  .header-nav ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .nav-tab {
+    display: block;
+    padding: var(--space-3) var(--space-4);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color var(--transition-fast), border-color var(--transition-fast),
+                background var(--transition-fast);
+  }
+
+  .nav-tab:hover {
+    color: var(--color-cyan);
+    text-decoration: none;
+  }
+
+  .nav-tab.active {
+    color: var(--color-cyan);
+    border-bottom-color: var(--color-cyan);
+  }
+
+  /* ── Mobile ── */
+  .mobile-nav-toggle {
+    display: none;
+    position: fixed;
+    /* sit just above the status bar */
+    bottom: calc(28px + var(--space-4));
+    right: var(--space-6);
+    z-index: 200;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-bright);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    font-size: 1.4rem;
+    color: var(--color-cyan);
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mobile-nav {
+    position: fixed;
+    bottom: calc(28px + var(--space-4) + 44px + var(--space-2));
+    right: var(--space-6);
+    z-index: 200;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-bright);
+    border-radius: var(--radius-sm);
+    padding: var(--space-4);
+    min-width: 180px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  }
+
+  .mobile-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .mobile-nav a {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm);
+    transition: color var(--transition-fast), background var(--transition-fast);
+  }
+
+  .mobile-nav a:hover,
+  .mobile-nav a.active {
+    color: var(--color-cyan);
+    background: var(--color-surface-2);
+    text-decoration: none;
+  }
+
+  @media (max-width: 640px) {
+    .header-nav { display: none; }
+    .mobile-nav-toggle { display: flex; }
+  }
+</style>
+
+<script>
+  const toggle = document.querySelector('.mobile-nav-toggle');
+  const nav    = document.getElementById('mobile-nav');
+
+  toggle?.addEventListener('click', () => {
+    const isOpen = !nav?.hidden;
+    if (nav) nav.hidden = isOpen;
+    toggle.setAttribute('aria-expanded', String(!isOpen));
+  });
+
+  document.addEventListener('click', (e) => {
+    if (nav && !nav.hidden &&
+        !toggle?.contains(e.target as Node) &&
+        !nav.contains(e.target as Node)) {
+      nav.hidden = true;
+      toggle?.setAttribute('aria-expanded', 'false');
+    }
+  });
+</script>

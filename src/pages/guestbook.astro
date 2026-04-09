@@ -1,0 +1,319 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RetroWindow from '../components/RetroWindow.astro';
+
+// Fake guestbook entries — the Geocities vibe
+const entries = [
+  {
+    name: 'xX_N3tscap3_Warrior_Xx',
+    date: '1999-04-12',
+    location: 'AOL Chatroom, USA',
+    message: 'OMG I love your site!! The background is SO COOL. Can I steal your hit counter code?? Please sign my guestbook too!! ✨✨✨',
+    email: 'napster4lyfe@aol.com',
+  },
+  {
+    name: 'CRTLover2000',
+    date: '2003-08-07',
+    location: 'CompuServe, Germany',
+    message: 'Best viewed at 800x600 in Internet Explorer 6.0. Have you considered adding MIDI background music? I recommend a Linkin Park song.',
+    email: 'crt_4ever@hotmail.com',
+  },
+  {
+    name: 'pixel_princess_98',
+    date: '2001-11-23',
+    location: 'GeoCities, Tokyo Prefecture',
+    message: 'ur site is totally awesome!! i added u to my links page 🌸 please link back to mine!! we should be web-rings!!!',
+    email: 'princess_pixel@yahoo.co.jp',
+  },
+  {
+    name: 'HaxorDude',
+    date: '2004-02-14',
+    location: 'Basement, New Jersey',
+    message: 'Nice HTML skillz lol. You should add some JavaScript DHTML snow effect. I can send u the code. Linux r00lz M$ dr00lz.',
+    email: 'void*@prodigy.net',
+  },
+  {
+    name: 'LAN_PARTY_QUEEN',
+    date: '2002-06-03',
+    location: 'Behind the Firewall',
+    message: 'Found your site thru a webring. The cursor trail effect is amazing how did you do that?? also your guestbook has more entries than mine 😭',
+    email: 'fragcount99@earthlink.net',
+  },
+  {
+    name: 'modern_dev_lurker',
+    date: '2024-01-16',
+    location: 'localhost:4321',
+    message: 'OK but genuinely this retro aesthetic is exactly what the modern web needs more of. Signed from 2024. Love the scanlines.',
+    email: 'just_vibes@proton.me',
+  },
+];
+---
+
+<BaseLayout
+  title="Guestbook"
+  description="Sign my guestbook! A static page with the spirit of the old web."
+>
+  <div class="guestbook-page container">
+    <header class="page-header">
+      <div class="page-header-prefix" aria-hidden="true">$ cat ~/guestbook.dat</div>
+      <h1 class="page-title">
+        <span class="glow-amber">✦</span> Guestbook
+      </h1>
+      <p class="page-description">
+        Welcome to my guestbook! In the proud tradition of the early web, this is a place
+        for visitors to leave their mark. The entries below are, uh, <em>definitely real</em> and
+        not fake at all. Sign mine and I'll sign yours! (No I won't. I mean maybe. Email me.)
+      </p>
+
+      <div class="construction-badge" style="margin-top: var(--space-4);" role="img" aria-label="Under construction">
+        🚧 real sign form coming soon™
+      </div>
+    </header>
+
+    <!-- Sign CTA -->
+    <RetroWindow title="sign_guestbook.exe" class="sign-window">
+      <div class="sign-inner">
+        <p class="sign-text">
+          Want to leave a real message? Send me an email and I'll add you to the book (manually, like it's 1998).
+        </p>
+        <div class="sign-actions">
+          <a href="mailto:hello@yourname.dev?subject=Guestbook%20Entry" class="btn btn-primary">
+            ✉ sign my guestbook
+          </a>
+          <a href="https://twitter.com/yourname" target="_blank" rel="noopener noreferrer" class="btn">
+            ✦ @ me instead
+          </a>
+        </div>
+      </div>
+    </RetroWindow>
+
+    <!-- Entry counter -->
+    <div class="entry-count" role="status" aria-live="polite">
+      <span class="glow-cyan">{entries.length}</span> entries
+      <span class="entry-count-since">since the dawn of the web</span>
+    </div>
+
+    <!-- Entries -->
+    <div class="entries-list" role="feed" aria-label="Guestbook entries">
+      {entries.map((entry, i) => (
+        <article class="entry-card" aria-label={`Entry from ${entry.name}`}>
+          <div class="entry-header">
+            <div class="entry-avatar" aria-hidden="true">
+              {entry.name[0].toUpperCase()}
+            </div>
+            <div class="entry-meta">
+              <p class="entry-name">{entry.name}</p>
+              <p class="entry-loc">
+                <span aria-hidden="true">📍</span> {entry.location}
+              </p>
+            </div>
+            <time class="entry-date" datetime={entry.date}>
+              {new Date(entry.date).toLocaleDateString('en-US', {
+                year: 'numeric', month: 'short', day: 'numeric'
+              })}
+            </time>
+          </div>
+          <blockquote class="entry-message">
+            <p>{entry.message}</p>
+          </blockquote>
+          {i === entries.length - 1 && (
+            <div class="entry-badge">latest</div>
+          )}
+        </article>
+      ))}
+    </div>
+
+    <!-- Footer joke -->
+    <div class="guestbook-footer">
+      <p class="footer-joke">
+        This guestbook was last signed on
+        <strong>{new Date(entries[entries.length - 1].date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</strong>.
+        Your visit has been logged. Welcome, traveler. 🌐
+      </p>
+      <div class="webring-joke" aria-hidden="true">
+        ◄ [prev] — <span class="glow-amber">✦ retro devs webring ✦</span> — [next] ►
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .guestbook-page {
+    padding: var(--space-12) 0 var(--space-16);
+    max-width: 720px;
+  }
+
+  .page-header { margin-bottom: var(--space-8); }
+
+  .page-header-prefix {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-dim);
+    margin-bottom: var(--space-2);
+  }
+
+  .page-title {
+    font-size: var(--text-4xl);
+    margin-bottom: var(--space-4);
+    color: var(--color-amber);
+    text-shadow: var(--glow-amber);
+  }
+
+  .page-description {
+    color: var(--color-text-muted);
+    font-size: var(--text-base);
+    line-height: 1.7;
+    max-width: 60ch;
+  }
+
+  .sign-window {
+    width: 100%;
+    margin-bottom: var(--space-8);
+  }
+
+  .sign-inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    flex-wrap: wrap;
+  }
+
+  .sign-text {
+    flex: 1;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    min-width: 200px;
+  }
+
+  .sign-actions {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    flex-shrink: 0;
+  }
+
+  .entry-count {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .entry-count-since {
+    color: var(--color-text-dim);
+    font-size: var(--text-xs);
+  }
+
+  .entries-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    margin-bottom: var(--space-12);
+  }
+
+  .entry-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: var(--space-6);
+    position: relative;
+    transition: border-color var(--transition-fast);
+  }
+
+  .entry-card:hover { border-color: var(--color-border-bright); }
+
+  .entry-header {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .entry-avatar {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--color-cyan-dim), var(--color-magenta-dim));
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: var(--text-base);
+    font-weight: bold;
+    color: var(--color-bg);
+    flex-shrink: 0;
+  }
+
+  .entry-meta { flex: 1; }
+
+  .entry-name {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-cyan);
+    margin-bottom: var(--space-1);
+  }
+
+  .entry-loc {
+    font-size: var(--text-xs);
+    color: var(--color-text-dim);
+  }
+
+  .entry-date {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-dim);
+    white-space: nowrap;
+  }
+
+  .entry-message {
+    border-left: 2px solid var(--color-amber-dim);
+    padding-left: var(--space-4);
+    margin: 0;
+    font-style: normal;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.7;
+  }
+
+  .entry-message p { margin: 0; }
+
+  .entry-badge {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--color-lime);
+    border: 1px solid var(--color-lime-dim);
+    padding: 1px 6px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .guestbook-footer {
+    text-align: center;
+    padding: var(--space-8);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+  }
+
+  .footer-joke {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-4);
+  }
+
+  .webring-joke {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-dim);
+    letter-spacing: 0.05em;
+  }
+</style>

@@ -1,0 +1,136 @@
+---
+import TagList from './TagList.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  status: 'active' | 'completed' | 'archived';
+  techStack: string[];
+  repoUrl?: string;
+  liveUrl?: string;
+  slug: string;
+  featured?: boolean;
+}
+
+const { title, description, status, techStack, repoUrl, liveUrl, slug, featured } = Astro.props;
+
+const statusLabels = { active: 'active', completed: 'done', archived: 'archived' };
+---
+<article class={`project-card ${featured ? 'featured' : ''}`}>
+  <div class="project-card-header">
+    <div class="project-icon" aria-hidden="true">▣</div>
+    <span class={`badge badge-${status}`}>{statusLabels[status]}</span>
+  </div>
+
+  <h2 class="project-title">
+    <a href={`/projects/${slug}`}>{title}</a>
+  </h2>
+
+  <p class="project-desc">{description}</p>
+
+  <div class="project-stack">
+    <TagList tags={techStack} />
+  </div>
+
+  <div class="project-links">
+    <a href={`/projects/${slug}`} class="btn btn-primary">details →</a>
+    {repoUrl && (
+      <a href={repoUrl} class="btn" target="_blank" rel="noopener noreferrer" aria-label={`${title} source code`}>
+        [src]
+      </a>
+    )}
+    {liveUrl && (
+      <a href={liveUrl} class="btn btn-magenta" target="_blank" rel="noopener noreferrer" aria-label={`${title} live demo`}>
+        [live]
+      </a>
+    )}
+  </div>
+</article>
+
+<style>
+  .project-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .project-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,245,255,0.03) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .project-card:hover {
+    border-color: var(--color-border-bright);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+  }
+
+  .project-card.featured {
+    border-color: var(--color-cyan-dim);
+  }
+
+  .project-card.featured::after {
+    content: '★ featured';
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--color-amber);
+    letter-spacing: 0.1em;
+  }
+
+  .project-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .project-icon {
+    font-size: 1.5rem;
+    color: var(--color-cyan-dim);
+    line-height: 1;
+  }
+
+  .project-title {
+    font-size: var(--text-lg);
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .project-title a {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .project-title a:hover {
+    color: var(--color-cyan);
+  }
+
+  .project-desc {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    margin: 0;
+    flex: 1;
+  }
+
+  .project-stack {
+    margin-top: auto;
+  }
+
+  .project-links {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+</style>

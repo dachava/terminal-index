@@ -1,0 +1,122 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="404 — Not Found" description="The page you're looking for has been lost to the void.">
+  <div class="not-found container">
+    <div class="error-box">
+      <div class="error-icon" aria-hidden="true">
+        <pre class="error-art">
+  ╔══════════════════════════════════╗
+  ║          404 NOT FOUND           ║
+  ║                                  ║
+  ║   The page you requested         ║
+  ║   does not exist.                ║
+  ║                                  ║
+  ║   It may have been deleted,      ║
+  ║   moved, or never existed.       ║
+  ║                                  ║
+  ║   [OK]              [Cancel]     ║
+  ╚══════════════════════════════════╝</pre>
+      </div>
+
+      <div class="error-content">
+        <h1 class="error-code glow-magenta">404</h1>
+        <p class="error-message">
+          <span class="glow-cyan">Error:</span> Page not found in the filesystem.
+        </p>
+        <p class="error-sub">
+          The document you're looking for has been lost to the bit rot, or perhaps
+          it never existed. We've searched the entire index and found nothing.
+        </p>
+
+        <div class="error-trace" aria-hidden="true">
+          <p>$ ls {Astro.url.pathname}</p>
+          <p class="trace-error">ls: cannot access '{Astro.url.pathname}': No such file or directory</p>
+        </div>
+
+        <div class="error-actions">
+          <a href="/" class="btn btn-primary">→ go home</a>
+          <a href="/blog" class="btn">→ read the blog</a>
+          <a href="/projects" class="btn">→ see projects</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .not-found {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-16) 0;
+  }
+
+  .error-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-8);
+    text-align: center;
+    max-width: 600px;
+  }
+
+  .error-art {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--color-magenta-dim);
+    background: none;
+    border: none;
+    padding: 0;
+    white-space: pre;
+    text-shadow: var(--glow-magenta);
+    animation: flicker 6s ease-in-out infinite;
+  }
+
+  .error-code {
+    font-size: 6rem;
+    line-height: 1;
+    margin-bottom: var(--space-4);
+  }
+
+  .error-message {
+    font-family: var(--font-mono);
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-4);
+  }
+
+  .error-sub {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    margin-bottom: var(--space-6);
+    max-width: 45ch;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .error-trace {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--color-magenta);
+    border-radius: var(--radius-sm);
+    padding: var(--space-4) var(--space-6);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    text-align: left;
+    margin-bottom: var(--space-8);
+    color: var(--color-text-muted);
+  }
+
+  .trace-error { color: var(--color-magenta); margin-top: var(--space-2); }
+
+  .error-actions {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+</style>

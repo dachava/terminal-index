@@ -1,0 +1,204 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { getCollection } from 'astro:content';
+
+const allProjects = (await getCollection('projects'))
+  .sort((a, b) => {
+    if (a.data.featured && !b.data.featured) return -1;
+    if (!a.data.featured && b.data.featured) return 1;
+    return b.data.startDate.valueOf() - a.data.startDate.valueOf();
+  });
+
+const allTech = [...new Set(allProjects.flatMap(p => p.data.techStack))].sort();
+
+const statusCounts = {
+  active:    allProjects.filter(p => p.data.status === 'active').length,
+  completed: allProjects.filter(p => p.data.status === 'completed').length,
+  archived:  allProjects.filter(p => p.data.status === 'archived').length,
+};
+---
+
+<BaseLayout
+  title="Projects"
+  description="Things I've built — open source tools, experiments, and side projects."
+>
+  <div class="projects-page container">
+    <header class="page-header">
+      <div class="page-header-prefix" aria-hidden="true">$ ls ~/projects</div>
+      <h1 class="page-title">Projects</h1>
+      <p class="page-description">
+        Things I've built, am building, or have abandoned in a moment of hubris.
+        <span class="status-summary">
+          <span class="badge badge-active">{statusCounts.active} active</span>
+          <span class="badge badge-completed">{statusCounts.completed} completed</span>
+          {statusCounts.archived > 0 && (
+            <span class="badge badge-archived">{statusCounts.archived} archived</span>
+          )}
+        </span>
+      </p>
+    </header>
+
+    {allTech.length > 0 && (
+      <nav class="tag-filter" aria-label="Filter projects by technology" id="tech-filter">
+        <span class="tag-filter-label">filter by tech:</span>
+        <ul class="tag-filter-list" role="list">
+          <li>
+            <button class="tag active" data-tech="" aria-pressed="true">#all</button>
+          </li>
+          {allTech.map(tech => (
+            <li>
+              <button class="tag" data-tech={tech} aria-pressed="false">#{tech}</button>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    )}
+
+    <p class="filter-status" id="filter-status" aria-live="polite" hidden></p>
+
+    <div class="card-grid" id="projects-grid">
+      {allProjects.map(project => (
+        <ProjectCard
+          title={project.data.title}
+          description={project.data.description}
+          status={project.data.status}
+          techStack={project.data.techStack}
+          repoUrl={project.data.repoUrl}
+          liveUrl={project.data.liveUrl}
+          slug={project.id}
+          featured={project.data.featured}
+        />
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  const filterEl  = document.getElementById('tech-filter');
+  const statusEl  = document.getElementById('filter-status');
+  const grid      = document.getElementById('projects-grid');
+
+  if (!filterEl || !grid) throw new Error('Missing elements');
+
+  let activeTech = new URLSearchParams(window.location.search).get('tech') ?? '';
+
+  function applyFilter(tech: string) {
+    activeTech = tech;
+
+    const url = new URL(window.location.href);
+    tech ? url.searchParams.set('tech', tech) : url.searchParams.delete('tech');
+    window.history.replaceState({}, '', url.toString());
+
+    filterEl!.querySelectorAll<HTMLButtonElement>('[data-tech]').forEach(btn => {
+      const isActive = btn.dataset.tech === tech;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-pressed', String(isActive));
+    });
+
+    const cards = grid!.querySelectorAll<HTMLElement>('article');
+    let visible = 0;
+    cards.forEach(card => {
+      const tags = Array.from(card.querySelectorAll('.tag')).map(
+        t => t.textContent?.replace('#', '').trim() ?? ''
+      );
+      const show = !tech || tags.includes(tech);
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+
+    if (statusEl) {
+      if (tech) {
+        statusEl.textContent = `Showing ${visible} project${visible !== 1 ? 's' : ''} using #${tech}`;
+        statusEl.hidden = false;
+      } else {
+        statusEl.hidden = true;
+      }
+    }
+  }
+
+  applyFilter(activeTech);
+
+  filterEl.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-tech]');
+    if (btn) applyFilter(btn.dataset.tech ?? '');
+  });
+</script>
+
+<style>
+  .projects-page {
+    padding: var(--space-12) 0 var(--space-16);
+  }
+
+  .page-header { margin-bottom: var(--space-8); }
+
+  .page-header-prefix {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-dim);
+    margin-bottom: var(--space-2);
+  }
+
+  .page-title {
+    font-size: var(--text-4xl);
+    margin-bottom: var(--space-4);
+    color: var(--color-magenta);
+    text-shadow: var(--glow-magenta);
+  }
+
+  .page-description {
+    color: var(--color-text-muted);
+    font-size: var(--text-base);
+    line-height: 1.6;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+  }
+
+  .status-summary {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+
+  .tag-filter {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+    padding: var(--space-4);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+  }
+
+  .tag-filter-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-dim);
+    padding-top: 3px;
+    white-space: nowrap;
+  }
+
+  .tag-filter-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .tag-filter-list .tag {
+    border: none;
+    cursor: pointer;
+  }
+
+  .filter-status {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-6);
+  }
+</style>

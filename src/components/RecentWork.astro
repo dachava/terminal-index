@@ -1,0 +1,322 @@
+---
+interface Entry {
+  type: 'post' | 'project';
+  label: string;
+  path: string;
+  description: string;
+  meta: string;
+  tags: string[];
+  date: string;
+  isoDate: string;
+}
+
+interface Props {
+  entries: Entry[];
+}
+
+const { entries } = Astro.props;
+---
+
+<section class="recent-work" aria-labelledby="recent-work-heading">
+  <!-- Prompt header -->
+  <div class="rw-prompt" aria-hidden="true">
+    <span class="prompt-user">divinity</span><span class="prompt-at">@</span><span
+      class="prompt-host">dachava.dev</span><span class="prompt-sep">:</span><span
+      class="prompt-path">~</span><span class="prompt-dollar">$</span>
+    <span class="prompt-cmd"> ./recent-work</span>
+    <span class="prompt-cursor blink">▌</span>
+  </div>
+
+  <h2 id="recent-work-heading" class="sr-only">Recent work</h2>
+
+  <!-- Entries -->
+  <ol class="rw-list" aria-label="Recent posts and projects">
+    {entries.map((entry, i) => (
+      <li class="rw-entry" style={`animation-delay: ${i * 70}ms`}>
+        <!-- Top row -->
+        <div class="rw-row">
+          <span class="rw-perm" aria-hidden="true">drwxr</span>
+          <span class={`rw-type rw-type-${entry.type}`}>
+            {entry.type === 'post' ? 'blog/' : 'proj/'}
+          </span>
+          <a href={entry.path} class="rw-label">{entry.label}</a>
+          <span class="rw-spacer" aria-hidden="true"></span>
+          <time class="rw-date" datetime={entry.isoDate}>{entry.date}</time>
+          <span class={`rw-meta rw-meta-${entry.type}`}>{entry.meta}</span>
+        </div>
+        <!-- Description row -->
+        <div class="rw-desc-row" aria-hidden="true">
+          <span class="rw-desc-indent"></span>
+          <span class="rw-desc">{entry.description}</span>
+        </div>
+        <!-- Tags row -->
+        {entry.tags.length > 0 && (
+          <div class="rw-tags-row" aria-hidden="true">
+            <span class="rw-desc-indent"></span>
+            <span class="rw-tags">{entry.tags.map(t => `#${t}`).join('  ')}</span>
+          </div>
+        )}
+      </li>
+    ))}
+  </ol>
+
+  <!-- Heartbeat ticker + nav links -->
+  <div class="rw-heartbeat" aria-live="polite" aria-atomic="true">
+    <span class="hb-dot" aria-hidden="true"></span>
+    <span class="hb-label" id="rw-hb-label"></span>
+    <div class="rw-footer-links">
+      <a href="/blog" class="btn">all posts →</a>
+      <a href="/projects" class="btn">all projects →</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .recent-work {
+    margin: var(--space-12) 0;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  /* ── Prompt ── */
+  .rw-prompt {
+    display: flex;
+    align-items: center;
+    padding: var(--space-3) var(--space-6);
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    gap: 0;
+    flex-wrap: wrap;
+  }
+
+  .prompt-user   { color: var(--color-lime); }
+  .prompt-at     { color: var(--color-text-dim); }
+  .prompt-host   { color: var(--color-cyan); }
+  .prompt-sep    { color: var(--color-text-dim); }
+  .prompt-path   { color: var(--color-magenta); }
+  .prompt-dollar { color: var(--color-text-dim); margin: 0 var(--space-2); }
+  .prompt-cmd    { color: var(--color-text-muted); }
+  .prompt-cursor { color: var(--color-cyan); margin-left: 4px; }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
+  .blink { animation: blink 1.1s step-end infinite; }
+
+  /* ── List ── */
+  .rw-list {
+    list-style: none;
+    margin: 0;
+    padding: var(--space-2) var(--space-6);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .rw-entry {
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--color-border);
+    opacity: 0;
+    animation: row-in 0.3s ease forwards;
+  }
+
+  .rw-entry:last-child { border-bottom: none; }
+
+  @keyframes row-in {
+    from { opacity: 0; transform: translateX(-6px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  /* Top row */
+  .rw-row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+  }
+
+  .rw-perm {
+    color: var(--color-text-dim);
+    flex-shrink: 0;
+    letter-spacing: 0.05em;
+  }
+
+  .rw-type {
+    flex-shrink: 0;
+    font-weight: bold;
+    letter-spacing: 0.04em;
+  }
+
+  .rw-type-post    { color: var(--color-cyan); }
+  .rw-type-project { color: var(--color-magenta); }
+
+  .rw-label {
+    color: var(--color-text);
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 36ch;
+    flex-shrink: 1;
+    transition: color var(--transition-fast);
+  }
+
+  .rw-label:hover { color: var(--color-cyan); }
+
+  .rw-spacer {
+    flex: 1;
+    border-bottom: 1px dotted var(--color-border);
+    margin-bottom: 4px;
+    min-width: var(--space-4);
+  }
+
+  .rw-date {
+    color: var(--color-text-dim);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .rw-meta {
+    flex-shrink: 0;
+    font-size: var(--text-xs);
+    padding: 1px 6px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  .rw-meta-post    { color: var(--color-text-dim); }
+  .rw-meta-project {
+    color: var(--color-lime);
+    background: rgba(0, 255, 65, 0.06);
+    border: 1px solid rgba(0, 255, 65, 0.15);
+  }
+
+  :global([data-theme="light"]) .rw-meta-project {
+    color: var(--color-lime-dim);
+    background: rgba(0, 188, 212, 0.08);
+    border-color: rgba(0, 188, 212, 0.2);
+  }
+
+  /* Description + tags rows */
+  .rw-desc-row,
+  .rw-tags-row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    margin-top: 3px;
+  }
+
+  .rw-desc-indent {
+    /* aligns under the label — perm(5) + gap + type(5) + gap */
+    flex-shrink: 0;
+    width: calc(5ch + var(--space-3) + 5ch + var(--space-3));
+  }
+
+  .rw-desc {
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .rw-tags {
+    color: var(--color-text-dim);
+    letter-spacing: 0.02em;
+  }
+
+  /* ── Heartbeat ── */
+  .rw-heartbeat {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-6);
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    min-height: 28px;
+  }
+
+  .hb-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-lime);
+    flex-shrink: 0;
+    animation: hb-pulse 2.4s ease-in-out infinite;
+  }
+
+  @keyframes hb-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0,255,65,0.6); opacity: 1; }
+    50%       { box-shadow: 0 0 0 5px rgba(0,255,65,0); opacity: 0.7; }
+  }
+
+  :global([data-theme="light"]) .hb-dot {
+    animation-name: hb-pulse-ice;
+  }
+
+  @keyframes hb-pulse-ice {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0,188,212,0.5); opacity: 1; }
+    50%       { box-shadow: 0 0 0 5px rgba(0,188,212,0); opacity: 0.7; }
+  }
+
+  .hb-label {
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: opacity 0.4s ease;
+  }
+
+  .hb-label.fade { opacity: 0; }
+
+  .rw-footer-links {
+    margin-left: auto;
+    display: flex;
+    gap: var(--space-3);
+    flex-shrink: 0;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .rw-prompt, .rw-list, .rw-heartbeat { padding-left: var(--space-4); padding-right: var(--space-4); }
+    .rw-perm    { display: none; }
+    .rw-label   { max-width: 20ch; }
+    .rw-tags-row { display: none; }
+    .rw-desc-indent {
+      width: calc(5ch + var(--space-3));
+    }
+  }
+</style>
+
+<script>
+  const entries: { text: string }[] = [];
+
+  document.querySelectorAll<HTMLElement>('.rw-entry').forEach(row => {
+    const type  = row.querySelector('.rw-type')?.textContent?.trim() ?? '';
+    const label = row.querySelector('.rw-label')?.textContent?.trim() ?? '';
+    const meta  = row.querySelector('.rw-meta')?.textContent?.trim() ?? '';
+    const date  = row.querySelector('.rw-date')?.textContent?.trim() ?? '';
+    entries.push({ text: `${type}  ${label}  ·  ${meta}  ·  ${date}` });
+  });
+
+  const hbLabel = document.getElementById('rw-hb-label');
+  if (hbLabel && entries.length > 0) {
+    let idx = 0;
+    function showEntry() {
+      hbLabel!.classList.add('fade');
+      setTimeout(() => {
+        hbLabel!.textContent = entries[idx].text;
+        hbLabel!.classList.remove('fade');
+        idx = (idx + 1) % entries.length;
+      }, 400);
+    }
+    showEntry();
+    setInterval(showEntry, 4000);
+  }
+</script>

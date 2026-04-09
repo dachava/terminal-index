@@ -1,0 +1,284 @@
+---
+interface Props {
+  src: string;       // path to .ans file, e.g. "/images/avatar.ans"
+  label?: string;
+  cols?: number;     // canvas width in chars, default 80
+}
+
+const { src, label = 'ANSI art', cols = 80 } = Astro.props;
+---
+
+<div
+  class="ansi-wrap"
+  role="img"
+  aria-label={label}
+  data-src={src}
+  data-cols={cols}
+  id="ansi-art-block"
+>
+  <div class="ansi-loading" aria-hidden="true">
+    <span class="ansi-loading-dot"></span>
+    <span class="ansi-loading-text">loading...</span>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────────────────────────
+// Mini virtual terminal — handles cursor movement + SGR color codes
+// Supports everything real ANSI art needs without a heavy library
+// ─────────────────────────────────────────────────────────────────────────────
+
+interface Cell {
+  char: string;
+  fg: string;
+  bg: string;
+  bold: boolean;
+}
+
+// CGA 16-color palette (indices 0-15)
+const CGA: string[] = [
+  '#000000','#aa0000','#00aa00','#aa5500',
+  '#0000aa','#aa00aa','#00aaaa','#aaaaaa',
+  '#555555','#ff5555','#55ff55','#ffff55',
+  '#5555ff','#ff55ff','#55ffff','#ffffff',
+];
+
+function emptyCell(): Cell {
+  return { char: ' ', fg: '#aaaaaa', bg: '#000000', bold: false };
+}
+
+function parseAndRender(text: string, COLS: number): string {
+  // Build a virtual grid — rows grow dynamically
+  const grid: Cell[][] = [];
+
+  let curRow = 0;
+  let curCol = 0;
+  let fg     = '#aaaaaa';
+  let bg     = '#000000';
+  let bold   = false;
+
+  function ensureRow(r: number) {
+    while (grid.length <= r) grid.push([]);
+  }
+
+  function putChar(ch: string) {
+    ensureRow(curRow);
+    grid[curRow][curCol] = { char: ch, fg, bg, bold };
+    curCol++;
+    if (curCol >= COLS) {
+      curCol = 0;
+      curRow++;
+    }
+  }
+
+  // Escape sequence regex: ESC [ ... final-byte
+  const ESC = '\x1b';
+  let i = 0;
+
+  while (i < text.length) {
+    // ESC sequence
+    if (text[i] === ESC && text[i + 1] === '[') {
+      i += 2;
+      let seq = '';
+      while (i < text.length && !/[A-Za-z]/.test(text[i])) {
+        seq += text[i++];
+      }
+      const cmd = text[i++] ?? '';
+      const params = seq.split(';').map(n => parseInt(n || '0', 10));
+
+      if (cmd === 'H' || cmd === 'f') {
+        // Cursor position: ESC[row;colH (1-based)
+        curRow = Math.max(0, (params[0] || 1) - 1);
+        curCol = Math.max(0, (params[1] || 1) - 1);
+
+      } else if (cmd === 'A') {
+        curRow = Math.max(0, curRow - (params[0] || 1));
+      } else if (cmd === 'B') {
+        curRow += (params[0] || 1);
+      } else if (cmd === 'C') {
+        curCol = Math.min(COLS - 1, curCol + (params[0] || 1));
+      } else if (cmd === 'D') {
+        curCol = Math.max(0, curCol - (params[0] || 1));
+
+      } else if (cmd === 'J') {
+        // Clear screen — reset grid and cursor
+        grid.length = 0;
+        curRow = 0; curCol = 0;
+
+      } else if (cmd === 'm') {
+        // SGR — colors and attributes
+        if (params.length === 0 || (params.length === 1 && params[0] === 0)) {
+          fg = '#aaaaaa'; bg = '#000000'; bold = false;
+        }
+        let pi = 0;
+        while (pi < params.length) {
+          const p = params[pi];
+          if (p === 0)  { fg = '#aaaaaa'; bg = '#000000'; bold = false; }
+          else if (p === 1) { bold = true; }
+          else if (p === 22) { bold = false; }
+          else if (p >= 30 && p <= 37) {
+            fg = CGA[p - 30 + (bold ? 8 : 0)];
+          } else if (p === 38 && params[pi+1] === 5) {
+            // 256-color fg
+            const idx = params[pi+2] ?? 0;
+            fg = idx < 16 ? CGA[idx] : `#888`; // simplified
+            pi += 2;
+          } else if (p >= 40 && p <= 47) {
+            bg = CGA[p - 40];
+          } else if (p >= 90 && p <= 97) {
+            fg = CGA[p - 90 + 8]; // bright fg
+          } else if (p >= 100 && p <= 107) {
+            bg = CGA[p - 100 + 8]; // bright bg
+          }
+          pi++;
+        }
+      }
+      // ignore other sequences (cursor save/restore, etc.)
+      continue;
+    }
+
+    // Carriage return
+    if (text[i] === '\r') { curCol = 0; i++; continue; }
+
+    // Line feed
+    if (text[i] === '\n') { curRow++; curCol = 0; i++; continue; }
+
+    // Skip raw ESC without bracket (rare)
+    if (text[i] === ESC) { i++; continue; }
+
+    // Regular character
+    putChar(text[i]);
+    i++;
+  }
+
+  // ── Render grid → HTML ──────────────────────────────────────────────────
+  // Group consecutive cells with identical style into <span>s, one div per row
+  function esc(s: string): string {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  const lines: string[] = [];
+  for (let r = 0; r < grid.length; r++) {
+    const row = grid[r];
+    if (!row || row.length === 0) { lines.push('<div> </div>'); continue; }
+
+    let line = '<div>';
+    let runFg = '', runBg = '', runBold = false, runChars = '';
+
+    function flushRun() {
+      if (!runChars) return;
+      const style = `color:${runFg};background:${runBg};${runBold ? 'font-weight:bold;' : ''}`;
+      line += `<span style="${style}">${esc(runChars)}</span>`;
+      runChars = '';
+    }
+
+    for (let c = 0; c < row.length; c++) {
+      const cell = row[c] ?? emptyCell();
+      if (cell.fg !== runFg || cell.bg !== runBg || cell.bold !== runBold) {
+        flushRun();
+        runFg = cell.fg; runBg = cell.bg; runBold = cell.bold;
+      }
+      runChars += cell.char;
+    }
+    flushRun();
+    line += '</div>';
+    lines.push(line);
+  }
+
+  return lines.join('');
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
+const wrap = document.getElementById('ansi-art-block') as HTMLElement;
+const src  = wrap?.dataset.src;
+const cols = parseInt(wrap?.dataset.cols ?? '80', 10);
+if (!wrap || !src) throw new Error('AnsiArt: missing src');
+
+async function main() {
+  const res = await fetch(src!);
+  if (!res.ok) throw new Error(`fetch failed: ${res.status}`);
+
+  const buf = await res.arrayBuffer();
+  const raw = new Uint8Array(buf);
+
+  // Strip SAUCE record (128-byte block starting with "SAUCE")
+  let dataEnd = raw.length;
+  const magic = [0x53,0x41,0x55,0x43,0x45]; // "SAUCE"
+  for (let i = Math.max(0, raw.length - 128); i < raw.length - 4; i++) {
+    if (magic.every((b, j) => raw[i + j] === b)) {
+      dataEnd = i;
+      if (dataEnd > 0 && raw[dataEnd - 1] === 0x1a) dataEnd--;
+      break;
+    }
+  }
+  const data = raw.slice(0, dataEnd);
+
+  // Decode CP437
+  let text: string;
+  try {
+    text = new TextDecoder('ibm437').decode(data);
+  } catch {
+    text = new TextDecoder('utf-8').decode(data);
+  }
+
+  const html = parseAndRender(text, cols);
+  wrap.innerHTML = `<div class="ansi-pre">${html}</div>`;
+}
+
+main().catch(err => {
+  console.warn('AnsiArt:', err);
+  wrap.innerHTML = `<pre class="ansi-pre ansi-error">// render failed\n// ${err.message}</pre>`;
+});
+</script>
+
+<style>
+  .ansi-wrap {
+    display: inline-block;
+    background: #000;
+    border: 1px solid var(--color-border-bright);
+    border-radius: var(--radius-sm);
+    overflow: auto;
+  }
+
+  .ansi-loading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: var(--space-6);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: #00ff41;
+  }
+
+  .ansi-loading-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #00ff41;
+    animation: ansi-pulse 1s ease-in-out infinite;
+  }
+
+  @keyframes ansi-pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.2; }
+  }
+
+  .ansi-pre {
+    font-family: 'Perfect DOS VGA 437', 'PxPlus IBM VGA8', 'DOS VGA',
+                 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.15;
+    margin: 0;
+    padding: 4px;
+    background: #000;
+    white-space: pre;
+  }
+
+  .ansi-pre div {
+    white-space: pre;
+    min-height: 1em;
+  }
+
+  .ansi-error { color: #ff5555; padding: var(--space-4); }
+</style>

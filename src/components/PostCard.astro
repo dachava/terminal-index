@@ -1,0 +1,89 @@
+---
+import TagList from './TagList.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  tags: string[];
+  slug: string;
+  readingTime?: string;
+}
+
+const { title, description, pubDate, tags, slug, readingTime } = Astro.props;
+
+const formattedDate = pubDate.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
+---
+<article class="post-card">
+  <div class="post-card-meta">
+    <time datetime={pubDate.toISOString()} class="post-date">{formattedDate}</time>
+    {readingTime && <span class="post-reading-time">· {readingTime}</span>}
+  </div>
+  <h2 class="post-title">
+    <a href={`/blog/${slug}`}>{title}</a>
+  </h2>
+  <p class="post-excerpt">{description}</p>
+  {tags.length > 0 && <TagList tags={tags} linkPrefix="/blog?tag=" />}
+</article>
+
+<style>
+  .post-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--color-cyan-dim);
+    border-radius: var(--radius-sm);
+    padding: var(--space-6);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .post-card:hover {
+    border-left-color: var(--color-cyan);
+    box-shadow: -4px 0 12px rgba(0, 245, 255, 0.1);
+  }
+
+  .post-card-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-dim);
+  }
+
+  .post-title {
+    font-size: var(--text-xl);
+    margin: 0;
+  }
+
+  .post-title a {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .post-title a:hover {
+    color: var(--color-cyan);
+    text-shadow: var(--glow-cyan);
+  }
+
+  .post-excerpt {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .post-reading-time {
+    color: var(--color-text-dim);
+  }
+</style>
