@@ -1,8 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import RetroWindow from '../components/RetroWindow.astro';
 import AvatarFrame from '../components/AvatarFrame.astro';
 import RecentWork from '../components/RecentWork.astro';
+import RetroWindow from '../components/RetroWindow.astro';
+import AboutTeaser from '../components/AboutTeaser.astro';
 import { getCollection } from 'astro:content';
 import '../styles/index.css';
 
@@ -60,7 +61,7 @@ const workEntries = [
           <span class="glow-cyan"></span>
         </p>
         <h1 class="hero-name">
-          <span class="glow-cyan">Diego</span><span class="glow-magenta">Chavarria</span>
+          <span class="glow-cyan">Diego</span><span class="glow-magenta">Chavarría</span>
         </h1>
         <p class="hero-tagline">
           software engineer &amp; digital tourist<br />
@@ -90,31 +91,9 @@ const workEntries = [
 
   <!-- ── About teaser ── -->
   <section class="section container teaser-section" aria-labelledby="about-heading">
-    <RetroWindow title="about.txt" class="about-teaser">
-      <div class="about-teaser-inner">
-        <div class="about-teaser-text">
-          <h2 id="about-heading" class="glow-magenta">$ cat about.txt</h2>
-          <p>
-            I'm a software engineer who writes too much CSS and not enough tests.
-            I care deeply about performance, accessibility, and the craft of building
-            things that feel good to use.
-          </p>
-          <p>
-            When I'm not pushing pixels or arguing about tab width, I'm probably
-            reading about old computers, tinkering with mechanical keyboards,
-            or playing a video game from 2003.
-          </p>
-          <a href="/about" class="btn btn-primary">read more →</a>
-        </div>
-        <div class="about-teaser-skills" aria-label="Tech skills">
-          <p class="skills-label">// skills[]</p>
-          <div class="skills-grid">
-            {['TypeScript', 'Rust', 'Astro', 'React', 'CSS', 'Node.js', 'SQL', 'Linux'].map(skill => (
-              <span class="skill-item">{skill}</span>
-            ))}
-          </div>
-        </div>
-      </div>
+    <h2 id="about-heading" class="sr-only">About</h2>
+    <RetroWindow title="whoami">
+      <AboutTeaser />
     </RetroWindow>
   </section>
 

@@ -1,0 +1,214 @@
+---
+// Update these to reflect you
+const info = [
+  { key: 'user',      val: 'Diego Chavarria'         },
+  { key: 'role',      val: 'software engineer'        },
+  { key: 'os',        val: 'linux btw'                },
+  { key: 'location',  val: 'somewhere on earth'       },
+  { key: 'focus',     val: 'web · systems · craft'    },
+  { key: 'languages', val: 'TypeScript · Rust · SQL'  },
+];
+
+const now = [
+  { icon: '▸', label: 'building',  val: 'dachava.dev'              },
+  { icon: '▸', label: 'reading',   val: 'update me'                },
+  { icon: '▸', label: 'playing',   val: 'something from 2003'      },
+  { icon: '▸', label: 'listening', val: 'update me'                },
+  { icon: '▸', label: 'editor',    val: 'whatever works'           },
+];
+
+// CGA color swatches for the neofetch footer
+const swatches = ['#000','#a00','#0a0','#a50','#00a','#a0a','#0aa','#aaa',
+                  '#555','#f55','#5f5','#ff5','#55f','#f5f','#5ff','#fff'];
+---
+
+<div class="about-teaser">
+  <!-- ── Neofetch panel ── -->
+  <div class="nf-panel">
+    <div class="nf-header">
+      <span class="nf-user glow-cyan">divinity</span><span class="nf-at">@</span><span class="nf-host glow-magenta">dachava.dev</span>
+    </div>
+    <div class="nf-sep" aria-hidden="true">{"─".repeat(28)}</div>
+
+    <dl class="nf-info">
+      {info.map(({ key, val }) => (
+        <div class="nf-row">
+          <dt class="nf-key">{key}</dt>
+          <dd class="nf-val">{val}</dd>
+        </div>
+      ))}
+    </dl>
+
+    <div class="nf-sep nf-sep-bottom" aria-hidden="true">{"─".repeat(28)}</div>
+
+    <!-- Color swatches -->
+    <div class="nf-swatches" aria-hidden="true">
+      {swatches.map(c => (
+        <span class="nf-swatch" style={`background:${c}`}></span>
+      ))}
+    </div>
+  </div>
+
+  <!-- ── Divider ── -->
+  <div class="teaser-divider" aria-hidden="true"></div>
+
+  <!-- ── Currently panel ── -->
+  <div class="now-panel">
+    <p class="now-heading"><span class="glow-magenta">// currently</span></p>
+    <div class="now-sep" aria-hidden="true">{"─".repeat(22)}</div>
+
+    <ul class="now-list">
+      {now.map(({ icon, label, val }) => (
+        <li class="now-row">
+          <span class="now-icon" aria-hidden="true">{icon}</span>
+          <span class="now-label">{label}</span>
+          <span class="now-val">{val}</span>
+        </li>
+      ))}
+    </ul>
+
+    <a href="/about" class="btn btn-primary now-cta">read more →</a>
+  </div>
+</div>
+
+<style>
+  .about-teaser {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+  }
+
+  /* ── Neofetch ── */
+  .nf-panel {
+    padding: var(--space-6);
+  }
+
+  .nf-header {
+    font-size: var(--text-base);
+    font-weight: bold;
+    margin-bottom: var(--space-1);
+  }
+
+  .nf-at { color: var(--color-text-dim); }
+
+  .nf-sep {
+    color: var(--color-border-bright);
+    margin-bottom: var(--space-3);
+    font-size: var(--text-xs);
+    letter-spacing: 0;
+    white-space: pre;
+  }
+
+  .nf-sep-bottom {
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+
+  .nf-info {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-1) 0;
+    margin: 0;
+  }
+
+  .nf-row {
+    display: contents;
+  }
+
+  .nf-key {
+    color: var(--color-cyan);
+    font-weight: bold;
+    padding-right: var(--space-3);
+    white-space: nowrap;
+  }
+
+  .nf-key::after { content: ':'; }
+
+  .nf-val {
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  /* Color swatches */
+  .nf-swatches {
+    display: flex;
+    gap: 2px;
+    flex-wrap: wrap;
+    max-width: 240px;
+  }
+
+  .nf-swatch {
+    display: inline-block;
+    width: 18px;
+    height: 14px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  /* ── Divider ── */
+  .teaser-divider {
+    width: 1px;
+    background: var(--color-border);
+    margin: var(--space-6) 0;
+  }
+
+  /* ── Currently ── */
+  .now-panel {
+    padding: var(--space-6);
+  }
+
+  .now-heading {
+    font-size: var(--text-base);
+    font-weight: bold;
+    margin-bottom: var(--space-1);
+  }
+
+  .now-sep {
+    color: var(--color-border-bright);
+    font-size: var(--text-xs);
+    letter-spacing: 0;
+    white-space: pre;
+    margin-bottom: var(--space-3);
+  }
+
+  .now-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-6) 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .now-row {
+    display: grid;
+    grid-template-columns: 1em auto 1fr;
+    gap: var(--space-3);
+    align-items: baseline;
+  }
+
+  .now-icon { color: var(--color-magenta); }
+
+  .now-label {
+    color: var(--color-cyan);
+    font-weight: bold;
+    white-space: nowrap;
+    min-width: 9ch;
+  }
+
+  .now-val { color: var(--color-text-muted); }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .about-teaser {
+      grid-template-columns: 1fr;
+    }
+
+    .teaser-divider {
+      width: auto;
+      height: 1px;
+      margin: 0 var(--space-6);
+    }
+  }
+</style>
