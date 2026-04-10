@@ -341,6 +341,15 @@ th {
   z-index: 9999;
 }
 
+[data-theme="light"] .window {
+  background: #ffffff;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.1), 0 0 1px var(--color-border-bright);
+}
+
+[data-theme="light"] .window-titlebar {
+  background: var(--color-surface-3);
+}
+
 [data-theme="light"] .scanlines::before {
   background: repeating-linear-gradient(
     to bottom,
@@ -571,6 +580,16 @@ th {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: var(--space-6);
+}
+
+/* ── Shiki dual-theme activation ── */
+/* catppuccin-latte colors are hardcoded as defaults by Shiki;
+   dracula is stored in --shiki-dark/--shiki-dark-bg variables.
+   Only override in dark mode — light mode gets catppuccin naturally. */
+[data-theme="dark"] .astro-code,
+[data-theme="dark"] .astro-code span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
 }
 
 /* ── Prose styles (for markdown content) ── */
