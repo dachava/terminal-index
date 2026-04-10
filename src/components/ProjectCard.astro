@@ -18,7 +18,7 @@ const statusLabels = { active: 'active', completed: 'done', archived: 'archived'
 ---
 <article class={`project-card ${featured ? 'featured' : ''}`}>
   <div class="project-card-header">
-    <div class="project-icon" aria-hidden="true">▣</div>
+    <div class="project-icon" aria-hidden="true">{featured ? '◆' : '▣'}</div>
     <span class={`badge badge-${status}`}>{statusLabels[status]}</span>
   </div>
 
@@ -76,17 +76,13 @@ const statusLabels = { active: 'active', completed: 'done', archived: 'archived'
 
   .project-card.featured {
     border-color: var(--color-cyan-dim);
+    border-top: 2px solid var(--color-cyan);
+    box-shadow: 0 -1px 12px rgba(0, 255, 65, 0.15);
   }
 
-  .project-card.featured::after {
-    content: '★ featured';
-    position: absolute;
-    top: var(--space-3);
-    right: var(--space-3);
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    color: var(--color-amber);
-    letter-spacing: 0.1em;
+  .project-card.featured .project-icon {
+    color: var(--color-cyan);
+    text-shadow: var(--glow-cyan);
   }
 
   .project-card-header {
