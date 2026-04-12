@@ -1,0 +1,156 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RetroWindow from '../components/RetroWindow.astro';
+import '../styles/uses.css';
+
+const hardware = [
+  { key: 'machine',   val: 'ThinkPad X1 Carbon Gen 11' },
+  { key: 'cpu',       val: 'Intel Core i7-1365U' },
+  { key: 'ram',       val: '32 GB LPDDR5' },
+  { key: 'display',   val: '27" 4K IPS @ 144Hz + 14" built-in' },
+  { key: 'keyboard',  val: 'Keychron Q1 — Gateron Oil King' },
+  { key: 'mouse',     val: 'Logitech MX Master 3S' },
+  { key: 'audio',     val: 'Sennheiser HD 560S + Focusrite Scarlett Solo' },
+];
+
+const os = [
+  { key: 'os',        val: 'Arch Linux (btw)' },
+  { key: 'wm',        val: 'Hyprland' },
+  { key: 'terminal',  val: 'Ghostty' },
+  { key: 'shell',     val: 'zsh + starship prompt' },
+  { key: 'font',      val: 'Berkeley Mono' },
+  { key: 'theme',     val: 'Catppuccin Macchiato' },
+];
+
+const editor = [
+  { key: 'primary',   val: 'Neovim (LazyVim)' },
+  { key: 'secondary', val: 'VS Code — for pair sessions' },
+  { key: 'lsp',       val: 'typescript-language-server, rust-analyzer, pyright' },
+  { key: 'formatter', val: 'Prettier, rustfmt, black' },
+  { key: 'plugins',   val: 'telescope, oil.nvim, gitsigns, conform' },
+];
+
+const software = [
+  { key: 'browser',   val: 'Firefox — uBlock Origin, Vimium' },
+  { key: 'notes',     val: 'Obsidian (local vault, no sync)' },
+  { key: 'git gui',   val: 'lazygit' },
+  { key: 'http',      val: 'Bruno (replacing Postman)' },
+  { key: 'db',        val: 'TablePlus' },
+  { key: 'music',     val: 'Spotify + Last.fm scrobbling' },
+  { key: 'rss',       val: 'NewsFlash' },
+];
+---
+
+<BaseLayout
+  title="Uses"
+  description="Hardware, software, and tools in Diego's daily driver setup."
+>
+  <div class="uses-page container">
+    <header class="page-header">
+      <div class="page-header-prefix" aria-hidden="true">$ neofetch --config ~/.config/uses.conf</div>
+      <h1 class="page-title">
+        <span class="glow-cyan">✦</span> Uses
+      </h1>
+      <p class="page-description">
+        The hardware and software I use day-to-day. Inspired by
+        <a href="https://uses.tech" target="_blank" rel="noopener noreferrer">uses.tech</a>.
+        Last updated April 2026.
+      </p>
+    </header>
+
+    <div class="uses-grid">
+
+      <!-- Neofetch-style banner -->
+      <RetroWindow title="neofetch" class="neofetch-window">
+        <div class="neofetch-layout">
+          <pre class="neofetch-ascii" aria-hidden="true">{`
+  ██████╗ ██╗
+  ██╔══██╗██║
+  ██║  ██║██║
+  ██║  ██║██║
+  ██████╔╝╚═╝
+  ╚═════╝    `}
+          </pre>
+          <dl class="neofetch-info">
+            <div class="nf-row"><dt>user</dt><dd><span class="glow-cyan">divinity</span>@dachava.dev</dd></div>
+            <div class="nf-divider" aria-hidden="true"></div>
+            <div class="nf-row"><dt>os</dt><dd>Arch Linux x86_64</dd></div>
+            <div class="nf-row"><dt>wm</dt><dd>Hyprland</dd></div>
+            <div class="nf-row"><dt>shell</dt><dd>zsh 5.9</dd></div>
+            <div class="nf-row"><dt>editor</dt><dd>nvim</dd></div>
+            <div class="nf-row"><dt>uptime</dt><dd>too long</dd></div>
+            <div class="nf-colors" aria-label="Terminal color palette">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <span class={`nf-color nf-color-${i}`}></span>
+              ))}
+            </div>
+          </dl>
+        </div>
+      </RetroWindow>
+
+      <!-- Hardware -->
+      <section class="uses-section" aria-labelledby="hardware-heading">
+        <div class="section-label" aria-hidden="true">// hardware</div>
+        <h2 id="hardware-heading" class="sr-only">Hardware</h2>
+        <dl class="spec-list">
+          {hardware.map(({ key, val }) => (
+            <div class="spec-row">
+              <dt class="spec-key">{key}</dt>
+              <dd class="spec-val">{val}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      <!-- OS & Terminal -->
+      <section class="uses-section" aria-labelledby="os-heading">
+        <div class="section-label" aria-hidden="true">// os &amp; terminal</div>
+        <h2 id="os-heading" class="sr-only">OS and Terminal</h2>
+        <dl class="spec-list">
+          {os.map(({ key, val }) => (
+            <div class="spec-row">
+              <dt class="spec-key">{key}</dt>
+              <dd class="spec-val">{val}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      <!-- Editor -->
+      <section class="uses-section" aria-labelledby="editor-heading">
+        <div class="section-label" aria-hidden="true">// editor</div>
+        <h2 id="editor-heading" class="sr-only">Editor</h2>
+        <dl class="spec-list">
+          {editor.map(({ key, val }) => (
+            <div class="spec-row">
+              <dt class="spec-key">{key}</dt>
+              <dd class="spec-val">{val}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      <!-- Software -->
+      <section class="uses-section" aria-labelledby="software-heading">
+        <div class="section-label" aria-hidden="true">// software</div>
+        <h2 id="software-heading" class="sr-only">Software</h2>
+        <dl class="spec-list">
+          {software.map(({ key, val }) => (
+            <div class="spec-row">
+              <dt class="spec-key">{key}</dt>
+              <dd class="spec-val">{val}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+    </div>
+
+    <footer class="uses-footer">
+      <p class="uses-footer-note">
+        <span class="glow-text-dim" aria-hidden="true">$</span>
+        This page is hand-maintained. No affiliate links. No sponsorships. Just what I actually use.
+      </p>
+    </footer>
+  </div>
+</BaseLayout>
