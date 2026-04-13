@@ -107,7 +107,7 @@
 .bio-card { width: 100%; }
 
 .profile-text p {
-  color: var(--color-text-muted);
+  color: var(--color-text);
   font-size: var(--text-sm);
   line-height: 1.7;
   margin-bottom: var(--space-4);
@@ -353,9 +353,47 @@
 
   .stat-name { font-size: var(--text-3xl); }
   .stats { grid-template-columns: auto auto; }
+  .stat-status { justify-content: center; }
+
+  .tree-category {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .tree-chips {
+    grid-column: 1 / -1;
+    padding-left: calc(3ch + var(--space-3));
+  }
 
   .timeline-item {
-    grid-template-columns: 50px 24px 1fr;
-    gap: 0 var(--space-3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding-bottom: var(--space-6);
+  }
+
+  .timeline-year {
+    font-size: var(--text-xs);
+    text-align: left;
+  }
+
+  .timeline-connector {
+    display: none;
+  }
+
+  .ping-link {
+    padding: var(--space-3) var(--space-4);
+    flex-wrap: nowrap;
+  }
+
+  .ping-seq,
+  .ping-sep,
+  .ping-open { display: none; }
+
+  .ping-spacer { min-width: var(--space-2); }
+
+  .ping-time {
+    margin-left: auto;
+    flex-shrink: 0;
   }
 }

@@ -439,9 +439,9 @@ th {
   flex-shrink: 0;
 }
 
-.window-dot-close  { background: #ff5f57; }
-.window-dot-min    { background: #febc2e; }
-.window-dot-max    { background: #28c840; }
+.window-dot-close  { background: var(--color-magenta-dim); }
+.window-dot-min    { background: var(--color-amber-dim); }
+.window-dot-max    { background: var(--color-cyan-dim); }
 
 .window-title {
   flex: 1;
