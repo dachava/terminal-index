@@ -14,8 +14,8 @@
 .page-title {
   font-size: var(--text-4xl);
   margin-bottom: var(--space-4);
-  color: var(--color-magenta);
-  text-shadow: var(--glow-magenta);
+  color: var(--color-cyan);
+  text-shadow: var(--glow-cyan);
 }
 
 .page-description {
