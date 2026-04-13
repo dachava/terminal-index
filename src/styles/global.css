@@ -530,18 +530,18 @@ th {
 .btn:hover {
   border-color: var(--color-cyan);
   color: var(--color-cyan);
-  background: rgba(0, 245, 255, 0.05);
+  background: color-mix(in srgb, var(--color-cyan) 5%, transparent);
   text-decoration: none;
 }
 
 .btn-primary {
   border-color: var(--color-cyan);
   color: var(--color-cyan);
-  background: rgba(0, 245, 255, 0.08);
+  background: color-mix(in srgb, var(--color-cyan) 8%, transparent);
 }
 
 .btn-primary:hover {
-  background: rgba(0, 245, 255, 0.15);
+  background: color-mix(in srgb, var(--color-cyan) 15%, transparent);
   box-shadow: var(--glow-cyan);
 }
 
@@ -698,11 +698,15 @@ th {
     grid-template-columns: 1fr;
   }
 
-  /* Reduce text glow on small screens — spread bleeds into letterforms */
-  .glow-cyan    { text-shadow: 0 0 4px var(--color-cyan-dim); }
-  .glow-magenta { text-shadow: 0 0 4px var(--color-magenta-dim); }
-  .glow-lime    { text-shadow: 0 0 4px var(--color-lime-dim); }
-  .glow-amber   { text-shadow: 0 0 4px var(--color-amber-dim); }
+  /* Reduce glow variables on small screens — covers utility classes AND
+     any component that uses var(--glow-*) directly */
+  :root,
+  [data-theme="light"] {
+    --glow-cyan:    0 0 3px var(--color-cyan-dim);
+    --glow-magenta: 0 0 3px var(--color-magenta-dim);
+    --glow-lime:    0 0 3px var(--color-lime-dim);
+    --glow-amber:   0 0 3px var(--color-amber-dim);
+  }
 }
 
 /* ── Scrollbar styling ── */
