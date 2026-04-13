@@ -697,6 +697,12 @@ th {
   .card-grid {
     grid-template-columns: 1fr;
   }
+
+  /* Reduce text glow on small screens — spread bleeds into letterforms */
+  .glow-cyan    { text-shadow: 0 0 4px rgba(0, 255, 65, 0.5); }
+  .glow-magenta { text-shadow: 0 0 4px rgba(191, 95, 255, 0.5); }
+  .glow-lime    { text-shadow: 0 0 4px rgba(0, 255, 65, 0.5); }
+  .glow-amber   { text-shadow: 0 0 4px rgba(255, 224, 0, 0.5); }
 }
 
 /* ── Scrollbar styling ── */

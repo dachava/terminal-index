@@ -76,7 +76,4 @@
 
 @media (max-width: 640px) {
   .hero { padding: var(--space-8) 0; }
-
-  .hero-name .glow-cyan    { text-shadow: 0 0 4px rgba(0, 255, 65, 0.5); }
-  .hero-name .glow-magenta { text-shadow: 0 0 4px rgba(191, 95, 255, 0.5); }
 }
