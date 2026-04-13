@@ -120,7 +120,12 @@ const { entries } = Astro.props;
     border-bottom: 1px solid var(--color-border);
     opacity: 0;
     animation: row-in 0.3s ease forwards;
+    position: relative;
+    cursor: pointer;
+    transition: background var(--transition-fast);
   }
+
+  .rw-entry:hover { background: color-mix(in srgb, var(--color-cyan) 4%, transparent); }
 
   .rw-entry:last-child { border-bottom: none; }
 
@@ -164,7 +169,14 @@ const { entries } = Astro.props;
     transition: color var(--transition-fast);
   }
 
-  .rw-label:hover { color: var(--color-cyan); }
+  /* Stretch the link to cover the whole entry card */
+  .rw-label::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .rw-entry:hover .rw-label { color: var(--color-cyan); }
 
   .rw-spacer {
     flex: 1;
