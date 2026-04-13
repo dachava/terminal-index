@@ -5,36 +5,47 @@ import AvatarFrame from '../components/AvatarFrame.astro';
 import '../styles/about.css';
 
 const skills = {
-  Languages:  ['TypeScript', 'JavaScript', 'Rust', 'Python', 'SQL', 'Bash'],
-  Frontend:   ['Astro', 'React', 'CSS / Custom Properties', 'SVG', 'Canvas API', 'WebAssembly'],
-  Backend:    ['Node.js', 'Express', 'PostgreSQL', 'SQLite', 'Redis'],
-  Tools:      ['Git', 'Linux', 'Docker', 'Vim / Neovim', 'tmux'],
+  Cloud:  ['AWS', 'Azure', 'GCP'],
+  DevOps:   ['Terraform', 'Ansible', 'Git', 'Jenkins', 'Azure DevOps', 'ArgoCD'],
+  Scripting:    ['Python', 'Bash', 'Powershell'],
+  Platforms:      ['Linux', 'Unix', 'Win Server 20XX', 'Docker', 'Kubernetes'],
+  Security:    ['SAST/DAST', 'API-driven security controls', 'SAML/SSO'],
+  Databases:    ['MSSQL', 'MySQL', 'PostgreSQL', 'Oracle DB', 'MongoDB'],
 };
 
 const timeline = [
   {
-    year: '2024',
-    title: 'Senior Software Engineer',
-    org: 'Some Cool Company',
-    desc: 'Building developer tooling and internal platforms. Lots of TypeScript, some Rust, occasional CSS therapy.',
+    year: '2020 - 2025',
+    title: 'Senior Application Security Platform Engineer',
+    org: 'OpenText',
+    desc: 'Reduced critical vulnerabilities by 30% by deploying and operating SAST/DAST tooling at scale across hybrid AWS/Azure environments, leading risk-based triage of findings across application code and dependencies',
   },
   {
-    year: '2022',
-    title: 'Software Engineer',
-    org: 'Another Place',
-    desc: 'Full-stack web development. React frontend, Node.js APIs, PostgreSQL. First time touching production at scale.',
+    year: '2016 - 2020',
+    title: 'Senior Infrastructure Reliability Engineer',
+    org: 'Micro Focus',
+    desc: 'Accelerated incident recovery by 20% by commanding real-time response across OS, storage and recovery layers, coordinating hardware, platform and operations teams to restore production services within SLA targets',
+  },
+];
+
+const education = [
+  {
+    year: 'Feb 2026',
+    title: 'AWS Certified Cloud Practitioner (CLF-C02)',
+    org: 'Amazon Web Services',
+    desc: '',
   },
   {
-    year: '2020',
-    title: 'Junior Developer',
-    org: 'Agency Life Inc.',
-    desc: 'Client websites, WordPress customization, first taste of actually shipping things people use.',
+    year: 'Oct 2025',
+    title: 'Azure Administrator Associate (AZ-104)',
+    org: 'Microsoft Certified',
+    desc: '',
   },
   {
-    year: '2019',
-    title: 'CS Degree',
-    org: 'State University',
-    desc: 'Graduated. Learned algorithms, forgot most of them. Kept the problem-solving instincts.',
+    year: 'Jun 2024',
+    title: 'Bachelor of Engineering in Computer Science',
+    org: 'Universidad Fidélitas, San José',
+    desc: '',
   },
 ];
 
@@ -72,7 +83,7 @@ const contacts = [
           <h2 id="profile-heading" class="stat-name">
             <span class="glow-cyan">Diego</span> <span class="glow-magenta">Chavarría</span>
           </h2>
-          <p class="stat-handle">@divinity</p>
+          <p class="stat-handle">@Prosperity&Beauty</p>
           <div class="stat-divider" aria-hidden="true"></div>
           <dl class="stats">
             <div class="stat-row">
@@ -96,22 +107,17 @@ const contacts = [
       </div>
 
       <!-- Bio panel -->
-      <RetroWindow title="bio.txt" class="bio-card">
+      <RetroWindow title="bio.md" class="bio-card">
         <div class="profile-text" id="profile-heading">
           <p>
-            I'm a software engineer with a deep appreciation for the craft of making things.
-            I care about code that's readable, interfaces that feel good, and systems that
-            are fast by default.
+            I'm a cloud and infra engineer 9+ years in. Designed Disaster Recovery solutions and commanded AppSec efforts.
+            Sometimes I have to put some fires out, hey you can't win them all.
           </p>
           <p>
-            My aesthetic sense was formed by early 2000s web design — not the bad parts (Comic Sans,
-            auto-playing MIDI) but the good parts: the sense that websites were <em>places</em>, made
-            by people, for people. I try to bring that spirit to what I build now.
+            I've worked across platform engineering and security, which basically means I've seen what happens when you ignore both. 
+            Lately I'm mostly focused on cloud architecture, K8S, and automating anything that's worth it.
           </p>
-          <p>
-            When I'm not at a keyboard I'm probably reading about old computers, listening to black metal,
-            playing something from 2003, or trying to keep my plant alive.
-          </p>
+          
         </div>
       </RetroWindow>
 
@@ -120,7 +126,7 @@ const contacts = [
     <!-- Skills inventory -->
     <section class="skills-section" aria-labelledby="skills-heading">
       <div class="skills-prompt" aria-hidden="true">
-        <span class="prompt-user">divinity</span><span class="prompt-at">@</span><span class="prompt-host">dachava.dev</span><span class="prompt-sep">:</span><span class="prompt-path">~</span><span class="prompt-dollar">$</span>
+        <span class="prompt-user">621</span><span class="prompt-at">@</span><span class="prompt-host">dachava.dev</span><span class="prompt-sep">:</span><span class="prompt-path">~</span><span class="prompt-dollar">$</span>
         <span class="prompt-cmd">tree ~/skills</span>
       </div>
 
@@ -167,12 +173,36 @@ const contacts = [
       </ol>
     </section>
 
+    <!-- Education -->
+    <section class="timeline-section" aria-labelledby="education-heading">
+      <div class="section-heading">
+        <h2 id="education-heading">education</h2>
+      </div>
+
+      <ol class="timeline" role="list">
+        {education.map((item, i) => (
+          <li class="timeline-item">
+            <div class="timeline-year">{item.year}</div>
+            <div class="timeline-connector" aria-hidden="true">
+              <span class="timeline-dot"></span>
+              {i < education.length - 1 && <span class="timeline-line"></span>}
+            </div>
+            <div class="timeline-content">
+              <h3 class="timeline-title">{item.title}</h3>
+              <p class="timeline-org">{item.org}</p>
+              {item.desc && <p class="timeline-desc">{item.desc}</p>}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
     <!-- Contact -->
     <section class="contact-section" aria-labelledby="contact-heading">
       <h2 id="contact-heading" class="sr-only">Contact</h2>
 
       <div class="ping-prompt" aria-hidden="true">
-        <span class="prompt-user">divinity</span><span class="prompt-at">@</span><span class="prompt-host">dachava.dev</span><span class="prompt-sep">:</span><span class="prompt-path">~</span><span class="prompt-dollar">$</span>
+        <span class="prompt-user">621</span><span class="prompt-at">@</span><span class="prompt-host">dachava.dev</span><span class="prompt-sep">:</span><span class="prompt-path">~</span><span class="prompt-dollar">$</span>
         <span class="prompt-cmd">ping -c 1 {contacts.map(c => c.host).join(' ')}</span>
       </div>
 
