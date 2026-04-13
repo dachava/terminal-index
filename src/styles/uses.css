@@ -55,12 +55,12 @@
   margin-bottom: var(--space-12);
 }
 
-/* neofetch spans both columns */
-.neofetch-window {
+.neofetch-window,
+.gear-window {
   grid-column: 1 / -1;
 }
 
-/* ── Neofetch banner ── */
+/* ── Neofetch identity panel ── */
 
 .neofetch-layout {
   display: flex;
@@ -69,15 +69,31 @@
   flex-wrap: wrap;
 }
 
-.neofetch-ascii {
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  color: var(--color-cyan);
-  text-shadow: var(--glow-cyan);
-  line-height: 1.2;
-  white-space: pre;
-  margin: 0;
+.neofetch-avatar-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
   flex-shrink: 0;
+}
+
+.avatar-credit {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-dim);
+  text-align: center;
+}
+
+.credit-link {
+  color: var(--color-magenta);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-magenta-dim);
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.credit-link:hover {
+  color: var(--color-cyan);
+  border-color: var(--color-cyan-dim);
 }
 
 .neofetch-info {
@@ -135,35 +151,28 @@
 .nf-color-6 { background: #00ffd0; }
 .nf-color-7 { background: #c8f0c0; }
 
-/* ── Section blocks ── */
+/* ── Gear list (combined hardware + software) ── */
 
-.uses-section {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  padding: var(--space-6);
-  transition: border-color var(--transition-fast);
+.gear-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
 }
 
-.uses-section:hover {
-  border-color: var(--color-border-bright);
-}
-
-.section-label {
+.gear-section-label {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   color: var(--color-text-dim);
-  margin-bottom: var(--space-4);
   letter-spacing: 0.05em;
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-2);
 }
 
-/* ── Spec list (key: value rows) ── */
-
-.spec-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
+.gear-list .gear-section-label:first-child {
+  margin-top: 0;
 }
+
+/* ── Spec rows ── */
 
 .spec-row {
   display: grid;
@@ -217,15 +226,16 @@
     grid-template-columns: 1fr;
   }
 
-  .neofetch-window {
-    grid-column: 1;
-  }
-
-  .neofetch-ascii {
-    font-size: 0.65rem;
-  }
-
   .spec-row {
     grid-template-columns: 80px 1fr;
+  }
+
+  .neofetch-layout {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .neofetch-info {
+    width: 100%;
   }
 }
