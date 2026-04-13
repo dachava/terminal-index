@@ -123,6 +123,30 @@ const contacts = [
 
     </section>
 
+    <!-- Timeline -->
+    <section class="timeline-section" aria-labelledby="timeline-heading">
+      <div class="section-heading">
+        <h2 id="timeline-heading">experience</h2>
+      </div>
+
+      <ol class="timeline" role="list">
+        {timeline.map((item, i) => (
+          <li class="timeline-item">
+            <div class="timeline-year">{item.year}</div>
+            <div class="timeline-connector" aria-hidden="true">
+              <span class="timeline-dot"></span>
+              {i < timeline.length - 1 && <span class="timeline-line"></span>}
+            </div>
+            <div class="timeline-content">
+              <h3 class="timeline-title">{item.title}</h3>
+              <p class="timeline-org">{item.org}</p>
+              <p class="timeline-desc">{item.desc}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
     <!-- Skills inventory -->
     <section class="skills-section" aria-labelledby="skills-heading">
       <div class="skills-prompt" aria-hidden="true">
@@ -147,30 +171,6 @@ const contacts = [
           );
         })}
       </div>
-    </section>
-
-    <!-- Timeline -->
-    <section class="timeline-section" aria-labelledby="timeline-heading">
-      <div class="section-heading">
-        <h2 id="timeline-heading">experience</h2>
-      </div>
-
-      <ol class="timeline" role="list">
-        {timeline.map((item, i) => (
-          <li class="timeline-item">
-            <div class="timeline-year">{item.year}</div>
-            <div class="timeline-connector" aria-hidden="true">
-              <span class="timeline-dot"></span>
-              {i < timeline.length - 1 && <span class="timeline-line"></span>}
-            </div>
-            <div class="timeline-content">
-              <h3 class="timeline-title">{item.title}</h3>
-              <p class="timeline-org">{item.org}</p>
-              <p class="timeline-desc">{item.desc}</p>
-            </div>
-          </li>
-        ))}
-      </ol>
     </section>
 
     <!-- Education -->
