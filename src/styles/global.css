@@ -698,12 +698,19 @@ th {
     grid-template-columns: 1fr;
   }
 
-  /* Reduce HCKR glow on small screens — COLD is already none */
+  /* Reduce HCKR glow on small screens */
   :root {
     --glow-cyan:    0 0 3px var(--color-cyan-dim);
     --glow-magenta: 0 0 3px var(--color-magenta-dim);
     --glow-lime:    0 0 3px var(--color-lime-dim);
     --glow-amber:   0 0 3px var(--color-amber-dim);
+  }
+  /* COLD: re-assert none after :root — same specificity, last wins */
+  [data-theme="light"] {
+    --glow-cyan:    none;
+    --glow-magenta: none;
+    --glow-lime:    none;
+    --glow-amber:   none;
   }
 }
 
