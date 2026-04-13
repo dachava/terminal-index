@@ -30,4 +30,13 @@ const projects = defineCollection({
   }),
 });
 
-export const collections = { blog, projects };
+const til = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/til' }),
+  schema: z.object({
+    title: z.string(),
+    pubDate: z.coerce.date(),
+    tags: z.array(z.string()).default([]),
+  }),
+});
+
+export const collections = { blog, projects, til };

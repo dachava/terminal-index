@@ -1,0 +1,133 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+import '../../styles/til.css';
+
+const allEntries = (await getCollection('til'))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const allTags = [...new Set(allEntries.flatMap(e => e.data.tags))].sort();
+
+function fmtDate(d: Date) {
+  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
+// Render all entries for inline display
+const rendered = await Promise.all(
+  allEntries.map(async (entry) => {
+    const { Content } = await render(entry);
+    return { entry, Content };
+  })
+);
+---
+
+<BaseLayout
+  title="TIL"
+  description="Today I Learned — short notes on things I've figured out."
+>
+  <div class="til-page container">
+    <header class="page-header">
+      <div class="page-header-prefix" aria-hidden="true">$ grep -r "learned" ~/notes/ | sort -r</div>
+      <h1 class="page-title">
+        <span class="glow-cyan">✦</span> TIL
+      </h1>
+      <p class="page-description">
+        Short notes on things I figured out. Not tutorials — just the thing itself.
+        <span class="entry-count">{allEntries.length} entries.</span>
+      </p>
+    </header>
+
+    <!-- Tag filter -->
+    {allTags.length > 0 && (
+      <nav class="tag-filter" aria-label="Filter by tag" id="tag-filter">
+        <span class="tag-filter-label">filter:</span>
+        <ul class="tag-filter-list" role="list">
+          <li><button class="tag active" data-tag="" aria-pressed="true">#all</button></li>
+          {allTags.map(tag => (
+            <li><button class="tag" data-tag={tag} aria-pressed="false">#{tag}</button></li>
+          ))}
+        </ul>
+      </nav>
+    )}
+
+    <!-- Log -->
+    <ol class="til-log" id="til-log" aria-label="TIL entries">
+      {rendered.map(({ entry, Content }) => (
+        <li class="til-entry" data-tags={entry.data.tags.join(',')}>
+          <div class="til-entry-header">
+            <span class="til-grep-prefix" aria-hidden="true">~/notes/</span>
+            <span class="til-tag-path">
+              {entry.data.tags[0] ?? 'misc'}
+            </span>
+            <span class="til-grep-sep" aria-hidden="true">:</span>
+            <time class="til-date" datetime={entry.data.pubDate.toISOString()}>
+              {fmtDate(entry.data.pubDate)}
+            </time>
+          </div>
+          <h2 class="til-title">
+            <a href={`/til/${entry.id}`}>{entry.data.title}</a>
+          </h2>
+          {entry.data.tags.length > 0 && (
+            <div class="til-tags" aria-label="Tags">
+              {entry.data.tags.map(t => (
+                <span class="til-tag">#{t}</span>
+              ))}
+            </div>
+          )}
+          <div class="til-preview prose">
+            <Content />
+          </div>
+        </li>
+      ))}
+    </ol>
+
+    <div class="til-empty" id="til-empty" hidden>
+      <p class="glow-cyan">$ grep — no matches found</p>
+      <button class="btn" id="clear-filter">clear filter</button>
+    </div>
+
+  </div>
+</BaseLayout>
+
+<script>
+  const filterEl = document.getElementById('tag-filter');
+  const logEl    = document.getElementById('til-log');
+  const emptyEl  = document.getElementById('til-empty');
+
+  if (!filterEl || !logEl) throw new Error('Missing TIL elements');
+
+  let activeTag = new URLSearchParams(window.location.search).get('tag') ?? '';
+
+  function applyFilter(tag: string) {
+    activeTag = tag;
+
+    const url = new URL(window.location.href);
+    tag ? url.searchParams.set('tag', tag) : url.searchParams.delete('tag');
+    window.history.replaceState({}, '', url.toString());
+
+    filterEl!.querySelectorAll<HTMLButtonElement>('[data-tag]').forEach(btn => {
+      const active = btn.dataset.tag === tag;
+      btn.classList.toggle('active', active);
+      btn.setAttribute('aria-pressed', String(active));
+    });
+
+    let visible = 0;
+    logEl!.querySelectorAll<HTMLElement>('.til-entry').forEach(el => {
+      const tags = el.dataset.tags?.split(',') ?? [];
+      const show = !tag || tags.includes(tag);
+      el.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+
+    if (emptyEl) emptyEl.hidden = visible > 0;
+  }
+
+  applyFilter(activeTag);
+
+  filterEl.addEventListener('click', e => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-tag]');
+    if (btn) applyFilter(btn.dataset.tag ?? '');
+  });
+
+  document.getElementById('clear-filter')?.addEventListener('click', () => applyFilter(''));
+</script>
