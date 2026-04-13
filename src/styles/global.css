@@ -105,11 +105,11 @@
   --color-amber-dim:     #c08800;
   --color-purple:        #7c3aed;
 
-  /* Stronger glows on light bg — need more punch to read against gray */
-  --glow-cyan:    0 0 6px #0057ff, 0 0 16px rgba(0, 87, 255, 0.25);
-  --glow-magenta: 0 0 6px #7c3aed, 0 0 16px rgba(124, 58, 237, 0.25);
-  --glow-lime:    0 0 6px #00bcd4, 0 0 16px rgba(0, 188, 212, 0.25);
-  --glow-amber:   0 0 6px #f0b000, 0 0 16px rgba(240, 176, 0, 0.25);
+  /* Tighter glows on light bg — large spreads bleed on bright backgrounds */
+  --glow-cyan:    0 0 4px #0057ff, 0 0 8px rgba(0, 87, 255, 0.2);
+  --glow-magenta: 0 0 4px #7c3aed, 0 0 8px rgba(124, 58, 237, 0.2);
+  --glow-lime:    0 0 4px #00bcd4, 0 0 8px rgba(0, 188, 212, 0.2);
+  --glow-amber:   0 0 4px #f0b000, 0 0 8px rgba(240, 176, 0, 0.2);
 }
 
 /* ── Reset & Base ── */
@@ -699,10 +699,10 @@ th {
   }
 
   /* Reduce text glow on small screens — spread bleeds into letterforms */
-  .glow-cyan    { text-shadow: 0 0 4px rgba(0, 255, 65, 0.5); }
-  .glow-magenta { text-shadow: 0 0 4px rgba(191, 95, 255, 0.5); }
-  .glow-lime    { text-shadow: 0 0 4px rgba(0, 255, 65, 0.5); }
-  .glow-amber   { text-shadow: 0 0 4px rgba(255, 224, 0, 0.5); }
+  .glow-cyan    { text-shadow: 0 0 4px var(--color-cyan-dim); }
+  .glow-magenta { text-shadow: 0 0 4px var(--color-magenta-dim); }
+  .glow-lime    { text-shadow: 0 0 4px var(--color-lime-dim); }
+  .glow-amber   { text-shadow: 0 0 4px var(--color-amber-dim); }
 }
 
 /* ── Scrollbar styling ── */
