@@ -105,11 +105,11 @@
   --color-amber-dim:     #c08800;
   --color-purple:        #7c3aed;
 
-  /* Tighter glows on light bg — large spreads bleed on bright backgrounds */
-  --glow-cyan:    0 0 4px #0057ff, 0 0 8px rgba(0, 87, 255, 0.2);
-  --glow-magenta: 0 0 4px #7c3aed, 0 0 8px rgba(124, 58, 237, 0.2);
-  --glow-lime:    0 0 4px #00bcd4, 0 0 8px rgba(0, 188, 212, 0.2);
-  --glow-amber:   0 0 4px #f0b000, 0 0 8px rgba(240, 176, 0, 0.2);
+  /* No glow on light bg — bloom is a dark-mode effect, light absorbs nothing */
+  --glow-cyan:    none;
+  --glow-magenta: none;
+  --glow-lime:    none;
+  --glow-amber:   none;
 }
 
 /* ── Reset & Base ── */
