@@ -3,7 +3,7 @@ title: "CSS Custom Properties Are Underrated"
 description: "Everyone knows CSS variables exist. Fewer people use them to their full potential. Here's a deep dive into what they can actually do — theming, responsive design, and runtime computation."
 pubDate: 2024-02-20
 tags: ["css", "web", "frontend"]
-draft: false
+draft: true
 ---
 
 CSS Custom Properties (the spec name for "CSS variables") have been in browsers since 2017. Seven years later, most devs use them like this:

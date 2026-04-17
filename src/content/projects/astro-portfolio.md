@@ -1,5 +1,5 @@
 ---
-title: "This Portfolio"
+title: "terminal-index"
 description: "The site you're looking at right now. Astro-powered, retro-styled, and hand-crafted with vanilla CSS. No Tailwind was harmed in the making of this site."
 status: "active"
 techStack: ["Astro", "TypeScript", "CSS", "MDX"]
@@ -10,17 +10,17 @@ featured: true
 
 ## Overview
 
-This portfolio is the site you're currently reading. It's built with Astro and styled with entirely hand-crafted CSS — no frameworks, no utility classes, no Tailwind.
+This portfolio is the site you're currently reading. It's built with Astro and styled with entirely hand-crafted CSS, no frameworks, no utility classes, no Tailwind.
 
-The aesthetic is deliberately retro: Geocities-era sensibilities (hit counters, window chrome, scanline overlays, neon on dark) applied with modern web standards (semantic HTML, accessible color contrast, responsive layouts, 0-JS by default).
+The aesthetic is deliberately retro: Geocities-era sensibilities (88x31 buttons, scanline overlays, neon on dark) applied with modern web standards (semantic HTML, accessible color contrast, responsive layouts, 0-JS by default).
 
 ## Design Decisions
 
 ### Why vanilla CSS?
 
-Tailwind is great for productivity. But for a personal site with a highly specific aesthetic, utility classes fight against you. Every retro effect I wanted needed custom CSS anyway — might as well own the whole stylesheet.
+Tailwind is great for productivity. But for a personal site with a highly specific aesthetic, utility classes fight against you. Every retro effect I wanted needed custom CSS anyway so might as well own the whole stylesheet.
 
-The design system is built entirely on CSS custom properties. Dark/light theming, the color palette, spacing, typography — all in `global.css`. No build step for styles.
+The design system is built entirely on CSS custom properties. Dark/light theming, the color palette, spacing, typography, all in `global.css`.
 
 ### Why no JavaScript on most pages?
 
@@ -61,7 +61,6 @@ The starfield canvas is the only thing that costs anything at runtime.
 
 Building a retro site with modern standards forced a bunch of interesting constraint-solving:
 
-- Scanline overlay via CSS `repeating-linear-gradient` — no images needed
+- Scanline overlay via CSS `repeating-linear-gradient` no images needed
 - Window chrome via pure CSS borders and flexbox
-- Fake hit counter that "persists" across the session via `sessionStorage`
 - Theme toggle with no FOUC via an inline `<script>` in `<head>` that runs before first paint

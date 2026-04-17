@@ -4,7 +4,7 @@ description: "I've been using Astro for production projects for six months. Here
 pubDate: 2024-03-10
 updatedDate: 2024-03-18
 tags: ["astro", "web", "javascript", "review"]
-draft: false
+draft: true
 ---
 
 Six months ago I started using Astro for every new static site project. Before that I was a happy Next.js user — app router, RSC, the whole deal. So why the switch?
