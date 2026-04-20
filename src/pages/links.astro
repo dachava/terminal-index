@@ -6,12 +6,15 @@ const qrBase = renderSVG('https://dachava.dev/links', { ecc: 'M' });
 const qrHckr = qrBase.replace(/#000/g, '#00ff41').replace(/#fff/g, '#050a05');
 const qrCold = qrBase.replace(/#000/g, '#0057ff').replace(/#fff/g, '#eef1f8');
 
+const openToWork = true;
+
 const links = [
   { icon: '[gh]',  label: 'github',    sub: 'github.com/dachava',       href: 'https://github.com/dachava',              accent: 'cyan'    },
   { icon: '[in]',  label: 'linkedin',  sub: 'in/diegochavab',           href: 'https://linkedin.com/in/diegochavab',     accent: 'cyan'    },
   { icon: '[✉]',   label: 'email',     sub: 'diego@dachava.dev',        href: 'mailto:diego@dachava.dev',                accent: 'magenta' },
   { icon: '[cv]',  label: 'résumé',    sub: 'view & download cv',       href: '/cv',                                     accent: 'lime'    },
   { icon: '[~/]',  label: 'portfolio', sub: 'dachava.dev',              href: '/',                                       accent: 'amber'   },
+  { icon: '[>_]',  label: 'now',       sub: "what i'm up to",          href: '/now',                                    accent: 'lime'    },
 ];
 ---
 
@@ -57,6 +60,7 @@ const links = [
             <p class="links-name"><span class="glow-cyan">Diego </span><span class="glow-magenta">Chavarría</span></p>
             <p class="links-role">software engineer</p>
             <p class="links-loc">San José, CRC</p>
+            {openToWork && <p class="links-available">● available</p>}
           </div>
 
           <div class="links-sep" aria-hidden="true"></div>
@@ -181,6 +185,12 @@ const links = [
   .links-loc {
     font-size: var(--text-xs);
     color: var(--color-text-dim);
+  }
+
+  .links-available {
+    font-size: var(--text-xs);
+    color: var(--color-text-dim);
+    margin-top: var(--space-1);
   }
 
   /* ── Separator ── */

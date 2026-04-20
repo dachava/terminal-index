@@ -1,0 +1,219 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RetroWindow from '../components/RetroWindow.astro';
+
+const updated = 'April 2026';
+---
+
+<BaseLayout
+  title="Now"
+  description="What Diego Chavarría is up to right now building, learning, and looking for."
+>
+  <div class="now-page container">
+
+    <header class="page-header">
+      <div class="page-header-prefix" aria-hidden="true">$ cat now.md</div>
+      <h1 class="page-title"><span class="glow-cyan">✦</span> Now</h1>
+      <p class="page-description">
+        A snapshot of what I'm up to. Last updated: <span class="glow-cyan">{updated}</span>.
+      </p>
+    </header>
+
+    <div class="now-grid">
+
+      <!-- Where I am -->
+      <RetroWindow title="location.txt">
+        <div class="now-section">
+          <p class="now-body">
+            Based in <strong>San José, Costa Rica</strong>. Working remotely, open to fully distributed teams or relocation for the right opportunity.
+          </p>
+          <p class="now-body">
+            My timezone is CST (UTC-6).
+          </p>
+        </div>
+      </RetroWindow>
+
+      <!-- What I'm building -->
+      <RetroWindow title="building.txt">
+        <div class="now-section">
+          <p class="now-body">
+            This site: <span class="glow-cyan">dachava.dev</span>. Started as a portfolio experiment, turned into a full digital home with a blog, project archive, and now a job fair card. Still adding things.
+          </p>
+          <p class="now-body">
+            On the side: digging into cloud security tooling, IAM policy design, and zero trust network architecture. Less tutorial, more hands-on lab work.
+          </p>
+        </div>
+      </RetroWindow>
+
+      <!-- What I'm learning -->
+      <RetroWindow title="learning.txt">
+        <div class="now-section">
+          <ul class="now-list">
+            <li><span class="now-bullet glow-cyan">▸</span> Cleared <strong>AZ-104</strong> [Azure Administrator] — Oct 2025</li>
+            <li><span class="now-bullet glow-cyan">▸</span> Cleared <strong>AWS CLF-C02</strong> [Cloud Practitioner] — Feb 2026</li>
+            <li><span class="now-bullet glow-cyan">▸</span> Working <strong>AWS SAA-C03</strong> [Solutions Architect] — Apr 2026</li>
+            <li><span class="now-bullet glow-cyan">▸</span> Going deeper on cloud security: threat modeling, least privilege, network segmentation</li>
+            <li><span class="now-bullet glow-cyan">▸</span> Reading <em>Fundamentals of Software Engineering</em> - great reference for junior and veterans alike.</li>
+          </ul>
+        </div>
+      </RetroWindow>
+
+      <!-- What I'm looking for -->
+      <RetroWindow title="looking_for.txt">
+        <div class="now-section">
+          <p class="now-body">
+            Backend or <strong>cloud infrastructure</strong> engineering roles. Most interested in teams working on distributed systems, DevOps pipelines, or security-adjacent infrastructure.
+          </p>
+          <p class="now-body">
+            Ideally somewhere I can own things end to end. Small teams or platform engineering orgs where the work actually ships and my time has value.
+          </p>
+          <p class="now-tag"><span class="glow-cyan">●</span> available now</p>
+        </div>
+      </RetroWindow>
+
+      <!-- What I'm not looking for -->
+      <RetroWindow title="not_looking_for.txt">
+        <div class="now-section">
+          <ul class="now-list">
+            <li><span class="now-bullet glow-magenta">✗</span> Frontend, even if this site is cute.</li>
+            <li><span class="now-bullet glow-magenta">✗</span> Places where "cloud" means one EC2 instance nobody touches</li>
+            <li><span class="now-bullet glow-magenta">✗</span> Unpaid trials or "test projects" before an offer</li>
+          </ul>
+        </div>
+      </RetroWindow>
+
+      <!-- Outside work -->
+      <RetroWindow title="outside_work.txt">
+        <div class="now-section">
+          <ul class="now-list">
+            <li><span class="now-bullet glow-amber">▸</span> Playing <strong>Crimson Desert</strong></li>
+            <li><span class="now-bullet glow-amber">▸</span> Listening to <strong>black metal</strong></li>
+            <li><span class="now-bullet glow-amber">▸</span> Running <strong>Devuan</strong>sysvinit, pid 1 = /sbin/init. NO systemd in this house</li>
+          </ul>
+        </div>
+      </RetroWindow>
+
+    </div>
+
+    <p class="now-footer">
+      Inspired by <a href="https://nownownow.com/about" target="_blank" rel="noopener noreferrer" class="glow-cyan">nownownow.com</a>
+    </p>
+
+  </div>
+</BaseLayout>
+
+<style>
+  .now-page {
+    padding: var(--space-12) 0 var(--space-16);
+  }
+
+  .page-header {
+    margin-bottom: var(--space-10);
+  }
+
+  .page-header-prefix {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-dim);
+    margin-bottom: var(--space-2);
+  }
+
+  .page-title {
+    font-size: var(--text-4xl);
+    margin-bottom: var(--space-4);
+    color: var(--color-cyan);
+    text-shadow: var(--glow-cyan);
+  }
+
+  .page-description {
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+  }
+
+  /* ── Grid ── */
+  .now-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-6);
+    margin-bottom: var(--space-10);
+  }
+
+  /* ── Section content ── */
+  .now-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .now-body {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  .now-body strong {
+    color: var(--color-text);
+  }
+
+  .now-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.6;
+  }
+
+  .now-list li {
+    display: flex;
+    gap: var(--space-3);
+    align-items: baseline;
+  }
+
+  .now-bullet {
+    flex-shrink: 0;
+    width: 1.2ch;
+  }
+
+  .now-list strong, .now-list em {
+    color: var(--color-text);
+    font-style: normal;
+  }
+
+  .now-tag {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-dim);
+    margin: var(--space-2) 0 0;
+  }
+
+  /* ── Footer ── */
+  .now-footer {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-dim);
+    text-align: center;
+  }
+
+  .now-footer a {
+    text-decoration: none;
+  }
+
+  .now-footer a:hover {
+    text-decoration: underline;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .now-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
