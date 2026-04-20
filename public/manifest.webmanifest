@@ -1,0 +1,22 @@
+{
+  "name": "dachava.dev",
+  "short_name": "dachava",
+  "description": "Diego Chavarría — software engineer",
+  "start_url": "/links",
+  "display": "standalone",
+  "background_color": "#050a05",
+  "theme_color": "#00ff41",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}
