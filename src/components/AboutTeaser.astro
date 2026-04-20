@@ -1,4 +1,18 @@
 ---
+import QRCode from 'qrcode';
+
+const qrHckr = await QRCode.toDataURL('https://dachava.dev/links', {
+  width: 120,
+  margin: 2,
+  color: { dark: '#00ff41', light: '#050a05' },
+});
+
+const qrCold = await QRCode.toDataURL('https://dachava.dev/links', {
+  width: 120,
+  margin: 2,
+  color: { dark: '#0057ff', light: '#eef1f8' },
+});
+
 // Update these to reflect you
 const info = [
   { key: 'user',      val: 'Diego Chavarría'         },
@@ -44,6 +58,13 @@ const swatches = ['#000','#a00','#0a0','#a50','#00a','#a0a','#0aa','#aaa',
       {swatches.map(c => (
         <span class="nf-swatch" style={`background:${c}`}></span>
       ))}
+    </div>
+
+    <!-- QR code -->
+    <div class="nf-qr" aria-label="QR code linking to dachava.dev">
+      <img class="nf-qr-hckr" src={qrHckr} alt="dachava.dev QR code" width="60" height="60" />
+      <img class="nf-qr-cold" src={qrCold} alt="dachava.dev QR code" width="60" height="60" />
+      <span class="nf-qr-label">dachava.dev</span>
     </div>
   </div>
 
@@ -142,6 +163,35 @@ const swatches = ['#000','#a00','#0a0','#a50','#00a','#a0a','#0aa','#aaa',
     width: 18px;
     height: 14px;
     border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  /* ── QR ── */
+  .nf-qr {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-top: var(--space-3);
+  }
+
+  .nf-qr img {
+    display: block;
+    border-radius: 2px;
+    image-rendering: pixelated;
+    flex-shrink: 0;
+  }
+
+  .nf-qr .nf-qr-cold { display: none; }
+
+  :global([data-theme="light"]) .nf-qr .nf-qr-hckr { display: none; }
+  :global([data-theme="light"]) .nf-qr .nf-qr-cold  { display: block; }
+
+  .nf-qr-label {
+    font-size: var(--text-xs);
+    color: var(--color-text-dim);
+    white-space: nowrap;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    letter-spacing: 0.05em;
   }
 
   /* ── Divider ── */

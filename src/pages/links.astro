@@ -1,0 +1,265 @@
+---
+import '../styles/global.css';
+
+const links = [
+  { icon: '[gh]',  label: 'github',    sub: 'github.com/dachava',       href: 'https://github.com/dachava',              accent: 'cyan'    },
+  { icon: '[in]',  label: 'linkedin',  sub: 'in/diegochavab',           href: 'https://linkedin.com/in/diegochavab',     accent: 'cyan'    },
+  { icon: '[✉]',   label: 'email',     sub: 'diego@dachava.dev',        href: 'mailto:diego@dachava.dev',                accent: 'magenta' },
+  { icon: '[cv]',  label: 'résumé',    sub: 'view & download cv',       href: '/cv',                                     accent: 'lime'    },
+  { icon: '[~/]',  label: 'portfolio', sub: 'dachava.dev',              href: '/',                                       accent: 'amber'   },
+];
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Diego Chavarría · links</title>
+    <meta name="description" content="Diego Chavarría — software engineer. Links & contact." />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="robots" content="noindex" />
+
+    <script is:inline>
+      (function() {
+        const saved = localStorage.getItem('theme');
+        const preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', saved || preferred);
+      })();
+    </script>
+  </head>
+
+  <body class="links-body">
+    <div class="links-stage">
+      <div class="links-card">
+
+        <!-- window chrome -->
+        <div class="links-chrome">
+          <div class="window-dots">
+            <span class="window-dot window-dot-close" aria-hidden="true"></span>
+            <span class="window-dot window-dot-min"   aria-hidden="true"></span>
+            <span class="window-dot window-dot-max"   aria-hidden="true"></span>
+          </div>
+          <span class="links-chrome-title">links.txt</span>
+          <button class="links-theme-btn" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">◑</button>
+        </div>
+
+        <!-- card body -->
+        <div class="links-body-inner">
+          <div class="links-identity">
+            <p class="links-name"><span class="glow-cyan">Diego </span><span class="glow-magenta">Chavarría</span></p>
+            <p class="links-role">software engineer</p>
+            <p class="links-loc">San José, CRC</p>
+          </div>
+
+          <div class="links-sep" aria-hidden="true"></div>
+
+          <nav aria-label="Contact links">
+            <ul class="links-list">
+              {links.map(({ icon, label, sub, href, accent }) => (
+                <li>
+                  <a href={href} class={`links-item accent-${accent}`} target={href.startsWith('http') ? '_blank' : undefined} rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}>
+                    <span class="links-icon" aria-hidden="true">{icon}</span>
+                    <span class="links-text">
+                      <span class="links-label">{label}</span>
+                      <span class="links-sub">{sub}</span>
+                    </span>
+                    <span class="links-arrow" aria-hidden="true">→</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div class="links-sep" aria-hidden="true"></div>
+
+          <p class="links-footer">dachava.dev</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+<style>
+  /* ── Page shell ── */
+  .links-body {
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-6);
+    background: var(--color-bg);
+    font-family: var(--font-mono);
+  }
+
+  .links-stage {
+    width: 100%;
+    max-width: 420px;
+  }
+
+  /* ── Card ── */
+  .links-card {
+    border: 1px solid var(--color-border-bright);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    overflow: hidden;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+  }
+
+  /* ── Chrome bar ── */
+  .links-chrome {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-4);
+    background: var(--color-surface-2);
+    border-bottom: 1px solid var(--color-border);
+    user-select: none;
+  }
+
+  .links-chrome-title {
+    flex: 1;
+    font-size: var(--text-xs);
+    color: var(--color-text-dim);
+    text-align: center;
+  }
+
+  .links-theme-btn {
+    background: none;
+    border: none;
+    color: var(--color-text-dim);
+    font-size: var(--text-sm);
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: color var(--transition-fast);
+  }
+
+  .links-theme-btn:hover { color: var(--color-cyan); }
+
+  /* ── Body ── */
+  .links-body-inner {
+    padding: var(--space-8) var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  /* ── Identity ── */
+  .links-identity {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .links-name {
+    font-size: clamp(1.4rem, 6vw, 1.8rem);
+    font-weight: bold;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+
+  .links-role {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .links-loc {
+    font-size: var(--text-xs);
+    color: var(--color-text-dim);
+  }
+
+  /* ── Separator ── */
+  .links-sep {
+    height: 1px;
+    background: var(--color-border);
+  }
+
+  /* ── Link list ── */
+  .links-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .links-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    color: var(--color-text-muted);
+    background: var(--color-surface-2);
+    transition: border-color var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
+  }
+
+  .links-icon {
+    font-size: var(--text-sm);
+    flex-shrink: 0;
+    width: 3ch;
+    color: var(--color-text-dim);
+    transition: color var(--transition-fast);
+  }
+
+  .links-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .links-label {
+    font-size: var(--text-sm);
+    font-weight: bold;
+    color: var(--color-text);
+    transition: color var(--transition-fast);
+  }
+
+  .links-sub {
+    font-size: var(--text-xs);
+    color: var(--color-text-dim);
+  }
+
+  .links-arrow {
+    font-size: var(--text-sm);
+    color: var(--color-text-dim);
+    transition: transform var(--transition-fast), color var(--transition-fast);
+  }
+
+  /* ── Accent hover states ── */
+  .accent-cyan:hover    { border-color: var(--color-cyan);    background: color-mix(in srgb, var(--color-cyan)    8%, transparent); }
+  .accent-magenta:hover { border-color: var(--color-magenta); background: color-mix(in srgb, var(--color-magenta) 8%, transparent); }
+  .accent-lime:hover    { border-color: var(--color-lime);    background: color-mix(in srgb, var(--color-lime)    8%, transparent); }
+  .accent-amber:hover   { border-color: var(--color-amber);   background: color-mix(in srgb, var(--color-amber)   8%, transparent); }
+
+  .accent-cyan:hover    .links-icon, .accent-cyan:hover    .links-label, .accent-cyan:hover    .links-arrow { color: var(--color-cyan);    }
+  .accent-magenta:hover .links-icon, .accent-magenta:hover .links-label, .accent-magenta:hover .links-arrow { color: var(--color-magenta); }
+  .accent-lime:hover    .links-icon, .accent-lime:hover    .links-label, .accent-lime:hover    .links-arrow { color: var(--color-lime);    }
+  .accent-amber:hover   .links-icon, .accent-amber:hover   .links-label, .accent-amber:hover   .links-arrow { color: var(--color-amber);   }
+
+  .links-item:hover .links-arrow { transform: translateX(3px); }
+
+  /* ── Footer ── */
+  .links-footer {
+    font-size: var(--text-xs);
+    color: var(--color-text-dim);
+    text-align: center;
+  }
+</style>
+
+<script>
+  const btn = document.getElementById('themeToggle');
+  btn?.addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+</script>
