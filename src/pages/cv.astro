@@ -1,0 +1,65 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/cv.css';
+
+const pdfPath = '/cv.pdf';
+---
+
+<BaseLayout
+  title="CV"
+  description="Diego Chavarría — Software Engineer résumé."
+  class="no-scanlines"
+>
+  <div class="cv-page container">
+    <header class="page-header">
+      <div class="page-header-prefix" aria-hidden="true">$ xdg-open cv.pdf</div>
+      <h1 class="page-title"><span class="glow-cyan">✦</span> CV</h1>
+      <p class="page-description">
+        My résumé. View inline or grab the PDF.
+      </p>
+    </header>
+
+    <div class="cv-actions">
+      <a href={pdfPath} download class="btn btn-primary">
+        ↓ download pdf
+      </a>
+      <a href={pdfPath} target="_blank" rel="noopener noreferrer" class="btn">
+        ↗ open in new tab
+      </a>
+    </div>
+
+    <div class="cv-viewer-wrap">
+      <div class="cv-viewer-chrome">
+        <div class="cv-viewer-bar">
+          <div class="window-dots">
+            <span class="window-dot window-dot-close" aria-hidden="true"></span>
+            <span class="window-dot window-dot-min" aria-hidden="true"></span>
+            <span class="window-dot window-dot-max" aria-hidden="true"></span>
+          </div>
+          <span class="cv-viewer-title">cv.pdf</span>
+          <div class="cv-viewer-actions">
+            <a href={pdfPath} download class="cv-action-btn" title="Download">↓</a>
+            <a href={pdfPath} target="_blank" rel="noopener noreferrer" class="cv-action-btn" title="Open in new tab">↗</a>
+          </div>
+        </div>
+
+        <object
+          data={pdfPath}
+          type="application/pdf"
+          class="cv-embed"
+          aria-label="CV PDF viewer"
+        >
+          <!-- Fallback for browsers that can't render PDF inline -->
+          <div class="cv-fallback">
+            <p>Your browser can't display PDFs inline.</p>
+            <div class="cv-fallback-actions">
+              <a href={pdfPath} download class="btn btn-primary">↓ download pdf</a>
+              <a href={pdfPath} target="_blank" rel="noopener noreferrer" class="btn">↗ open in new tab</a>
+            </div>
+          </div>
+        </object>
+      </div>
+    </div>
+
+  </div>
+</BaseLayout>

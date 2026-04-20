@@ -354,6 +354,9 @@ th {
   background: var(--color-surface-3);
 }
 
+/* CV page — no scanlines over the PDF viewer */
+.scanlines.no-scanlines::before { display: none; }
+
 [data-theme="light"] .scanlines::before {
   background: repeating-linear-gradient(
     to bottom,
