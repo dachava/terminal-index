@@ -3,8 +3,7 @@ title: "terminal-index"
 description: "The site you're looking at right now. Astro-powered, retro-styled, and hand-crafted with vanilla CSS. No Tailwind was harmed in the making of this site."
 status: "active"
 techStack: ["Astro", "TypeScript", "CSS", "MDX"]
-repoUrl: "https://github.com/yourname/portfolio"
-startDate: 2024-01-01
+startDate: 2026-02-06
 featured: true
 ---
 
