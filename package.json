@@ -18,10 +18,7 @@
     "@astrojs/sitemap": "^3.7.2",
     "ansi_up": "^6.0.6",
     "astro": "^6.1.5",
-    "qrcode": "^1.5.4",
-    "typescript": "^5.9.3"
-  },
-  "devDependencies": {
-    "@types/qrcode": "^1.5.6"
+    "typescript": "^5.9.3",
+    "uqr": "^0.1.3"
   }
 }

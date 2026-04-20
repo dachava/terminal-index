@@ -1,17 +1,9 @@
 ---
-import QRCode from 'qrcode';
+import { renderSVG } from 'uqr';
 
-const qrHckr = await QRCode.toDataURL('https://dachava.dev/links', {
-  width: 120,
-  margin: 2,
-  color: { dark: '#00ff41', light: '#050a05' },
-});
-
-const qrCold = await QRCode.toDataURL('https://dachava.dev/links', {
-  width: 120,
-  margin: 2,
-  color: { dark: '#0057ff', light: '#eef1f8' },
-});
+const qrBase = renderSVG('https://dachava.dev/links', { ecc: 'M' });
+const qrHckr = qrBase.replace(/#000/g, '#00ff41').replace(/#fff/g, '#050a05');
+const qrCold = qrBase.replace(/#000/g, '#0057ff').replace(/#fff/g, '#eef1f8');
 
 // Update these to reflect you
 const info = [
@@ -61,9 +53,9 @@ const swatches = ['#000','#a00','#0a0','#a50','#00a','#a0a','#0aa','#aaa',
     </div>
 
     <!-- QR code -->
-    <div class="nf-qr" aria-label="QR code linking to dachava.dev">
-      <img class="nf-qr-hckr" src={qrHckr} alt="dachava.dev QR code" width="60" height="60" />
-      <img class="nf-qr-cold" src={qrCold} alt="dachava.dev QR code" width="60" height="60" />
+    <div class="nf-qr" aria-label="QR code linking to dachava.dev/links">
+      <div class="nf-qr-hckr nf-qr-img"><Fragment set:html={qrHckr} /></div>
+      <div class="nf-qr-cold nf-qr-img"><Fragment set:html={qrCold} /></div>
       <span class="nf-qr-label">dachava.dev</span>
     </div>
   </div>
@@ -173,11 +165,17 @@ const swatches = ['#000','#a00','#0a0','#a50','#00a','#a0a','#0aa','#aaa',
     margin-top: var(--space-3);
   }
 
-  .nf-qr img {
-    display: block;
-    border-radius: 2px;
-    image-rendering: pixelated;
+  .nf-qr-img {
     flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+  }
+
+  .nf-qr-img :global(svg) {
+    display: block;
+    width: 60px;
+    height: 60px;
+    border-radius: 2px;
   }
 
   .nf-qr .nf-qr-cold { display: none; }
