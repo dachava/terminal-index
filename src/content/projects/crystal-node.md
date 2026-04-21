@@ -2,7 +2,7 @@
 title: "crystal-node"
 description: "A production-grade Kubernetes platform on AWS powering `chavastyle.com` workloads via EKS, API Gateway, and GitOps."
 status: "completed"
-techStack: ["EKS", "ArgoCD", "Route53", "Bash"]
+techStack: ["EKS", "ArgoCD", "Route53", "NLB" "Bash"]
 repoUrl: "https://github.com/dachava/crystal-node"
 startDate: 2026-03-12
 featured: false

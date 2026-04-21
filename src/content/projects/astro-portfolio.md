@@ -63,3 +63,4 @@ Building a retro site with modern standards forced a bunch of interesting constr
 - Scanline overlay via CSS `repeating-linear-gradient` no images needed
 - Window chrome via pure CSS borders and flexbox
 - Theme toggle with no FOUC via an inline `<script>` in `<head>` that runs before first paint
+
