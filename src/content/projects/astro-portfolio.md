@@ -2,9 +2,9 @@
 title: "terminal-index"
 description: "The site you're looking at right now. Astro-powered, retro-styled, and hand-crafted with vanilla CSS. No Tailwind was harmed in the making of this site."
 status: "active"
-techStack: ["Astro", "TypeScript", "CSS", "MDX"]
+techStack: ["Astro", "TypeScript", "MDX", "CSS"]
 startDate: 2026-02-06
-featured: true
+featured: false
 ---
 
 ## Overview
