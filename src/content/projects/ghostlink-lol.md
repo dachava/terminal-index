@@ -2,7 +2,7 @@
 title: "ghostlink.lol"
 description: "My anonymous URL shortener platform on AWS live at `ghostlink.lol` using via ECS Fargate, Lambda, RDS, and CI/CD."
 status: "active"
-techStack: ["ECS", "Lambda", "RDS", "FastAPI", "Terraform"]
+techStack: ["ECS", "Lambda", "RDS", "FastAPI", "Terraform", "DynamoDB"]
 repoUrl: "https://github.com/dachava/phantom-link"
 liveUrl: "https://ghostlink.lol"
 startDate: 2026-04-20
