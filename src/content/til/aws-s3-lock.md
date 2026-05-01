@@ -1,6 +1,6 @@
 ---
 title: "S3 now supports native state locking... really?"
-pubDate: 2026-04-28
+pubDate: 2026-04-25
 tags: ["aws", "s3", "terraform"]
 ---
 
