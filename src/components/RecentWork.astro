@@ -8,6 +8,7 @@ interface Entry {
   tags: string[];
   date: string;
   isoDate: string;
+  pinned?: boolean;
 }
 
 interface Props {
@@ -35,7 +36,10 @@ const { entries } = Astro.props;
       <li class="rw-entry" style={`animation-delay: ${i * 70}ms`}>
         <!-- Top row -->
         <div class="rw-row">
-          <span class="rw-perm" aria-hidden="true">drwxr</span>
+          {entry.pinned
+            ? <span class="rw-pin" aria-label="pinned">◆</span>
+            : <span class="rw-perm" aria-hidden="true">drwxr</span>
+          }
           <span class={`rw-type rw-type-${entry.type}`}>
             {entry.type === 'post' ? 'blog/' : 'proj/'}
           </span>
@@ -147,6 +151,15 @@ const { entries } = Astro.props;
     color: var(--color-text-dim);
     flex-shrink: 0;
     letter-spacing: 0.05em;
+  }
+
+  .rw-pin {
+    color: var(--color-cyan);
+    flex-shrink: 0;
+    font-size: 0.55rem;
+    line-height: 1;
+    align-self: center;
+    width: 5ch;
   }
 
   .rw-type {

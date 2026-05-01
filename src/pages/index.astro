@@ -32,6 +32,7 @@ const workEntries = [
     tags: p.data.tags.slice(0, 3),
     date: fmtDate(p.data.pubDate),
     isoDate: p.data.pubDate.toISOString(),
+    pinned: false,
   })),
   ...allProjects.map(p => ({
     type: 'project' as const,
@@ -42,9 +43,12 @@ const workEntries = [
     tags: p.data.techStack.slice(0, 3),
     date: fmtDate(p.data.startDate),
     isoDate: p.data.startDate.toISOString(),
+    pinned: p.data.featured ?? false,
   })),
-].sort((a, b) => new Date(b.isoDate).valueOf() - new Date(a.isoDate).valueOf())
- .slice(0, 8);
+].sort((a, b) => {
+  if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
+  return new Date(b.isoDate).valueOf() - new Date(a.isoDate).valueOf();
+}).slice(0, 8);
 ---
 
 <BaseLayout title="Home" description="Developer, builder, retro web enthusiast. Crafting fast, accessible, deliberately styled websites.">
@@ -99,4 +103,3 @@ const workEntries = [
   </section>
 
 </BaseLayout>
-

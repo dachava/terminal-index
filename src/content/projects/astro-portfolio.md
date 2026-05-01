@@ -38,11 +38,11 @@ Posts and projects are Markdown files in `src/content/`. Astro's content collect
 
 ## Technical Stack
 
-- **Astro 5.x** — Static site generation
+- **Astro 6.x** — Static site generation
 - **@astrojs/mdx** — MDX support for rich content
 - **@astrojs/sitemap** — Auto-generated sitemap
 - **@astrojs/rss** — RSS feed
-- **Shiki** — Syntax highlighting (github-dark theme)
+- **Shiki** — Syntax highlighting (dracula / catppuccin-latte)
 - **TypeScript** — Strict mode throughout
 
 ## Performance
