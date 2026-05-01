@@ -5,7 +5,7 @@ status: "completed"
 techStack: ["EKS", "ArgoCD", "Route53", "NLB", "Bash"]
 repoUrl: "https://github.com/dachava/crystal-node"
 startDate: 2026-03-12
-featured: false
+featured: true
 ---
 
 ## Overview

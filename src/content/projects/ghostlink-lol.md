@@ -6,7 +6,7 @@ techStack: ["ECS", "Lambda", "RDS", "FastAPI", "Terraform", "DynamoDB"]
 repoUrl: "https://github.com/dachava/phantom-link"
 liveUrl: "https://ghostlink.lol"
 startDate: 2026-04-20
-featured: true
+featured: false
 ---
 
 ## Overview
