@@ -31,6 +31,8 @@ The architecture is loosely coupled so apps run in dedicated namespaces with tig
 
 The business value is that onboarding a new service is not an infrastructure project... it's a manifest.
 
+---
+
 ## Architecture
 
 The entire infrastructure is written in Terraform with reusable modules: VPC, EKS, IAM, S3, API Gateway, Route53, observability, security, and CI/CD each live in their own module.
@@ -43,6 +45,8 @@ For security I implemented Pod Security Standards at the namespace level, networ
 
 Observability runs on Prometheus and Grafana for real-time metrics and dashboards, with CloudWatch Container Insights shipping logs and metrics to AWS for long-term retention.
 
+---
+
 ## Deploying apps
 Pushing to master triggers a GitHub Actions workflow. The workflow uses OIDC federation to assume an AWS IAM role. GitHub generates a short-lived token, exchanges it with AWS STS for temporary credentials scoped to just what the pipeline needs.
 
@@ -52,7 +56,7 @@ ArgoCD is watching the repo in a sync loop. It detects the new commit, pulls the
 
 ArgoCD's `selfHeal` setting means if anyone manually changes something in the cluster, ArgoCD detects the drift and reverts it.
 
-## New microservice onboarding
+### New microservice onboarding
 Onboarding a new service means four things. 
 1. Kubernetes manifests in a dedicated directory: k8s/service-name/deployment.yaml with the deployment, service, and any other resources.
 
@@ -64,6 +68,8 @@ Onboarding a new service means four things.
 
 The platform infrastructure VPC, EKS, networking, monitoring, etc., is shared and already running. A new service is maybe two hours of work to onboard. That's the value of building a platform instead of one-off infrastructure.
 
+---
+
 ## Scaling
 
 - Pod scaling via HPA (Horizontal):  when CPU or memory hits a threshold, Kubernetes adds more pod replicas in seconds.
@@ -71,12 +77,16 @@ The platform infrastructure VPC, EKS, networking, monitoring, etc., is shared an
 
 The two layers work together, HPA responds to load first, Cluster Autoscaler backs it up when pod density exceeds node capacity.
 
+---
+
 ## IRSA vs. EKS Pod Identity
 IRSA uses OIDC federation: the pod presents a token to STS which validates it against an OIDC provider registered in IAM. It works but it's a mess... you manage an OIDC provider, a thumbprint that can expire or mismatch, and complex trust policy conditions.
 
 In fact, one of the darkest debugging sessions for this project was caused by IRSA. At one point I kept getting 403 on AssumeRoleWithWebIdentity that traced back to the OIDC thumbprint after cluster recreation.
 
 Pod Identity is the modern replacement. Instead of the pod talking directly to STS, a Pod Identity Agent running on each node intercepts credential requests and exchanges them with the EKS API. No OIDC provider, no thumbprint, simpler trust policy.
+
+---
 
 ## What's next?
 For this project, probably nothing. I need to work on a FastAPI app I'm developing to keep track of my workouts and is already onboarded here, however the cost of keeping the cluser alive for such a simple app is a waste of resources. Still I will use it as a great reference and will post some other knowledge acquired from this project.

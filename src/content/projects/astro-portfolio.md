@@ -30,7 +30,7 @@ Astro ships zero JS by default, and I've tried to keep it that way. The only JS 
 - **Theme toggle** (saves to `localStorage`)
 - **Mobile nav** (toggle show/hide)
 
-Everything else is CSS. Hover effects, transitions, the marquee — all pure CSS.
+Everything else is CSS. Hover effects, transitions, the marquee... all pure CSS.
 
 ### Content Collections
 

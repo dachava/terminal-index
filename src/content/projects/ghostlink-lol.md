@@ -21,6 +21,8 @@ The application itself is a small FastAPI, that's not really the important part.
 
 Terraform was used to provision as usual, for now it's my tool of choice due to its ease to set up and manage state from AWS iself.
 
+---
+
 ## Architecture
 
 ### Creating a short link
@@ -59,7 +61,9 @@ The `ADD` operation is server-side and atomic, no read-modify-write, no race con
 
 If the processor fails after all retries (2 retries = 3 total attempts), the event is forwarded to an SQS dead-letter queue with a full error envelope. The click is not lost, it sits in the DLQ for 14 days waiting to be redriven once the root cause is fixed.
 
-### The Frontend
+---
+
+## The Frontend
 
 I applied the K.I.S.S. methodology, so the frontend is a single HTML stored in S3.
 CloudFront serves it with two ordered cache behaviors: `/` and `/index.html` route to S3, everything else
@@ -71,7 +75,9 @@ The API Gateway endpoint is injected into `index.html` at deploy time via `sed`.
 
 The HTML contains a `__API_ENDPOINT__` placeholder that the deploy script replaces with the live Terraform output before syncing to S3.
 
-### Stats
+---
+
+## Stats
 
 `GET /{code}/stats` hits the same API Gateway and Lambda as the create path.
 

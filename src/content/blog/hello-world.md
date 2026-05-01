@@ -1,46 +1,33 @@
 ---
 title: "Hello, World (Again)"
-description: "Every developer blog starts the same way. Here's mine, plus why I decided to build a Geocities-inspired portfolio in 2024 instead of using a template."
-pubDate: 2024-01-15
+description: "Why I built a custom portfolio instead of picking a template, and what this site actually is."
+pubDate: 2024-01-18
 tags: ["meta", "web", "retro"]
 draft: false
 ---
 
-Every developer blog starts the same way. You open a blank file, stare at it for fifteen minutes, and eventually type `console.log("h3llo w0rld")` like it's 1997 and you've just discovered JavaScript.
+I've had a few of these over the years. A Hashnode account, a Medium draft that never got published, a Notion page that I hated instantly. None of them stuck.
 
-So: h3llo, w0rld. Again.
-
-## Why a custom portfolio?
-
-There's a lot of easy options today: Ghost blogs, Notion pages, a Medium account, a Hashnode profile, etc. You can even use LinkedIn as your journal just pick your poison... but none of these ever click with me.
-
-Here's the problem I have: the platforms work fine but you have to stand by their rules, in your own small cube, where everyone is confined to the same space, minimal customization, and overall boring interaction. 
-
-So in the end, it was that none of them felt like *mine*. Simply put they look like everyone else's. The same card-based layout. The same muted gray palette. The same minimalistic corporatism that is roting us from the inside.
+The problem wasn't motivation. It was that none of those platforms felt like somewhere I'd actually want to write. Same layout, same gray palette, same card-based everything. They work fine, they just don't feel like anything.
 
 So I built this instead.
 
-## The Geocities revival (unironically)
+## Why retro
 
-There's something I love about early web design. Not the bad parts, but the *spirit* of it. The sense that someone made this thing with their hands. That it was a place, not a product. The Indie Web is still a great place to find such spaces.
+Early web had something modern web lost: the sense that a real person made it. Not a SaaS product's opinionated theme... a person, with a color picker and too much free time, making a place that was unmistakably theirs.
 
-Modern web design has optimized the humanity out of websites. Everything is `max-width: 1200px`, centered, card-based, with a hero section and a CTA button. It works! But it doesn't *feel* like anything.
+That's what I was going for here. CRT scanlines, neon on dark, window chrome on every card. The aesthetic is deliberate, not ironic. But it's still built on Astro, with semantic HTML, proper ARIA, and a Lighthouse score that doesn't embarrass me.
 
-This site is my attempt to capture that old-web energy with new-web tools. CRT scanlines via CSS. Window chrome on every card. Neon on dark. But built on Astro, with semantic HTML, proper ARIA, and a Lighthouse score that would make a corporate marketing site weep.
+The Indie Web is full of sites like this. I like being part of that.
 
-## What's coming
+## What I'll write about
 
-I'll be writing about:
+Stuff I'm actually building: projects at work, weekend tools, infra experiments. 
 
-- **Projects** the stuff I actually build at work and on weekends 
-- **Tools & workflow** the editor setup, the terminal config, the vim motions I've slowly acquired
-- **Building in public** what I'm working on, what's broken, what I learned
+Occasionally the workflow stuff: the terminal setup, the tools that actually stuck. And some building-in-public posts when I'm in the middle of something worth sharing.
 
-Just a blog.
+It's like a digital research book.
 
-```javascript
-// The simplest possible start
-console.log("Let's build something.");
-```
-
-If you made it this far, reconsider your life choices.
+> "Programming today is a race between software engineers striving to build bigger and better idiot-proof programs, and the universe trying to build bigger and better idiots. So far the universe is winning."
+>
+> — Rick Cook

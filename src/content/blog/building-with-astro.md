@@ -11,6 +11,8 @@ Six months ago I started using Astro for every new static site project. Before t
 
 Short answer: **shipping HTML feels good again**.
 
+---
+
 ## What Astro actually is
 
 Astro is a static site generator with a component model, content collections, and an island architecture. By default, it ships zero JavaScript. You opt in to interactivity at the component level.
