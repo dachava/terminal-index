@@ -18,6 +18,8 @@
     "@astrojs/sitemap": "^3.7.2",
     "ansi_up": "^6.0.6",
     "astro": "^6.1.5",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0",
     "typescript": "^5.9.3",
     "uqr": "^0.1.3"
   }
