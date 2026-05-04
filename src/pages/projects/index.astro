@@ -42,8 +42,11 @@ const statusCounts = {
 
     {allTech.length > 0 && (
       <nav class="tag-filter" aria-label="Filter projects by technology" id="tech-filter">
+        <button class="tag-filter-toggle" id="tag-filter-toggle" aria-expanded="false" aria-controls="tag-filter-list">
+          filter <span class="toggle-arrow" aria-hidden="true">▾</span>
+        </button>
         <span class="tag-filter-label">filter by tech:</span>
-        <ul class="tag-filter-list" role="list">
+        <ul class="tag-filter-list" role="list" id="tag-filter-list">
           <li>
             <button class="tag active" data-tech="" aria-pressed="true">#all</button>
           </li>
@@ -123,6 +126,13 @@ const statusCounts = {
   filterEl.addEventListener('click', (e) => {
     const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-tech]');
     if (btn) applyFilter(btn.dataset.tech ?? '');
+  });
+
+  // Mobile toggle
+  const toggleBtn = document.getElementById('tag-filter-toggle');
+  toggleBtn?.addEventListener('click', () => {
+    const open = filterEl.classList.toggle('is-open');
+    toggleBtn.setAttribute('aria-expanded', String(open));
   });
 </script>
 
