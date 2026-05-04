@@ -32,8 +32,11 @@ function readingTime(body: string) {
     <!-- Tag filter — client-side filtering -->
     {allTags.length > 0 && (
       <nav class="tag-filter" aria-label="Filter posts by tag" id="tag-filter">
+        <button class="tag-filter-toggle" id="tag-filter-toggle" aria-expanded="false" aria-controls="tag-filter-list">
+          filter <span class="toggle-arrow" aria-hidden="true">▾</span>
+        </button>
         <span class="tag-filter-label">filter:</span>
-        <ul class="tag-filter-list" role="list">
+        <ul class="tag-filter-list" role="list" id="tag-filter-list">
           <li>
             <button class="tag active" data-tag="" aria-pressed="true">#all</button>
           </li>
@@ -135,5 +138,13 @@ function readingTime(body: string) {
 
   // Clear from empty state
   document.getElementById('clear-filter')?.addEventListener('click', () => applyFilter(''));
+
+  // Mobile toggle
+  const toggleBtn = document.getElementById('tag-filter-toggle');
+  const filterList = document.getElementById('tag-filter-list');
+  toggleBtn?.addEventListener('click', () => {
+    const open = filterEl!.classList.toggle('is-open');
+    toggleBtn.setAttribute('aria-expanded', String(open));
+  });
 </script>
 
