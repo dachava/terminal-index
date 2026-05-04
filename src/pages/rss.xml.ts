@@ -4,19 +4,31 @@ import type { APIContext } from 'astro';
 
 export async function GET(context: APIContext) {
   const posts = (await getCollection('blog', ({ data }) => !data.draft))
-    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-
-  return rss({
-    title: 'yourname.dev',
-    description: 'Thoughts on web development, retro tech, tools, and building things in public.',
-    site: context.site!,
-    items: posts.map(post => ({
+    .map(post => ({
       title: post.data.title,
       pubDate: post.data.pubDate,
       description: post.data.description,
       link: `/blog/${post.id}/`,
       categories: post.data.tags,
-    })),
+    }));
+
+  const tils = (await getCollection('til'))
+    .map(til => ({
+      title: `TIL: ${til.data.title}`,
+      pubDate: til.data.pubDate,
+      description: undefined,
+      link: `/til/${til.id}/`,
+      categories: til.data.tags,
+    }));
+
+  const items = [...posts, ...tils]
+    .sort((a, b) => b.pubDate.valueOf() - a.pubDate.valueOf());
+
+  return rss({
+    title: 'dachava.dev',
+    description: 'Infrastructure, cloud, and AI — field notes from the terminal.',
+    site: context.site!,
+    items,
     customData: '<language>en-us</language>',
   });
 }
