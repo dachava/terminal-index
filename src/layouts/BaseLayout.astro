@@ -16,7 +16,7 @@ interface Props {
 
 const {
   title,
-  description = 'Personal portfolio, blog, and digital garden.',
+  description = 'Cloud engineer working across infrastructure, IaC, and AI in the real world.',
   ogImage,
   pubDate,
   noStarfield = false,
@@ -64,8 +64,25 @@ const fullTitle = title === 'Home' ? 'dachava.dev' : `${title} · dachava.dev`;
     <!-- RSS -->
     <link rel="alternate" type="application/rss+xml" title="dachava.dev RSS" href="/rss.xml" />
 
+    <!-- JSON-LD: Person (homepage only) -->
+    {title === 'Home' && (
+      <script type="application/ld+json" set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Person',
+        name: 'Diego Chava',
+        url: 'https://dachava.dev',
+        jobTitle: 'Cloud Engineer',
+        sameAs: [
+          'https://github.com/dachava',
+          'https://linkedin.com/in/diegochavab',
+        ],
+      })} />
+    )}
+
     <!-- KaTeX -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+
+    <slot name="head" />
 
     <!-- Theme init — runs before paint to avoid flash -->
     <script is:inline>

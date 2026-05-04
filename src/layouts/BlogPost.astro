@@ -35,6 +35,25 @@ const formattedUpd = updatedDate?.toLocaleDateString('en-US', {
 ---
 
 <BaseLayout title={title} description={description} pubDate={pubDate}>
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description: description,
+    datePublished: pubDate.toISOString(),
+    dateModified: (updatedDate ?? pubDate).toISOString(),
+    author: {
+      '@type': 'Person',
+      name: 'Diego Chava',
+      url: 'https://dachava.dev',
+    },
+    publisher: {
+      '@type': 'Person',
+      name: 'Diego Chava',
+      url: 'https://dachava.dev',
+    },
+    ...(heroImage ? { image: `https://dachava.dev${heroImage}` } : {}),
+  })} slot="head" />
   <article class="blog-post">
     <header class="post-header container">
       <div class="post-breadcrumb">
