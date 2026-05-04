@@ -5,13 +5,17 @@ import sitemap from '@astrojs/sitemap';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 
+import cloudflare from '@astrojs/cloudflare';
+
 export default defineConfig({
   site: 'https://dachava.dev',
   output: 'static',
+
   integrations: [
     mdx(),
     sitemap(),
   ],
+
   markdown: {
     remarkPlugins: [remarkMath],
     rehypePlugins: [rehypeKatex],
@@ -23,4 +27,6 @@ export default defineConfig({
       wrap: true,
     },
   },
+
+  adapter: cloudflare(),
 });
