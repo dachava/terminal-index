@@ -1,7 +1,7 @@
 {
 	"compatibility_date": "2026-05-04",
 	"compatibility_flags": ["global_fetch_strictly_public"],
-	"name": "portfolio",
+	"name": "terminal-index",
 	"main": "@astrojs/cloudflare/entrypoints/server",
 	"assets": {
 		"directory": "./dist",
