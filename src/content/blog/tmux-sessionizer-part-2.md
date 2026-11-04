@@ -15,7 +15,7 @@ draft: false
 
 Part 1 ended with a setup I genuinely love: WSL on the Windows rig, SSH into my dev box, one persistent tmux session, VSCodium and Claude Code riding on top. Detach, close the laptop, come back tomorrow, everything is exactly where you left it.
 
-That works perfectly for one project. Then you start a second. Then another one, another one... Suddenly that single session is a junk drawer: a Terraform plan in one window, a Claudio conversation with zero context, a hell of panes `cd`'d into directories unknown. The cure becomes worse than the disease.
+That works perfectly for one project. Then you start a second. Then another one, another one... Suddenly that single session is a junk drawer: a Terraform plan in one window, then Claudio conversations with zero context, a hell of panes `cd`'d into directories unknown, it's a mess. The cure becomes worse than the disease.
 
 The fix isn't more discipline. It's making project switching cost nothing: **one keystroke, fuzzy-pick a project, you're golden.**
 
@@ -38,7 +38,7 @@ Everything else in this post just makes that rule ergonomic.
 
 ## The sessionizer: ~20 lines of Bash
 
-This pattern comes straight from [ThePrimeagen's tmux-sessionizer](https://github.com/ThePrimeagen/.dotfiles), which is about as canonical as tmux tooling gets. Mine is a trimmed-down version pointed at where my projects actually live.
+This pattern is ripped off from [ThePrimeagen's tmux-sessionizer](https://github.com/ThePrimeagen/.dotfiles), which is about as canonical as tmux tooling gets. Mine is a trimmed-down version pointed at where my projects actually live.
 
 Install `fzf` on the server:
 

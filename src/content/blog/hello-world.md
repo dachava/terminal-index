@@ -6,15 +6,15 @@ tags: ["meta", "web", "retro"]
 draft: false
 ---
 
-I've had a few of these over the years. A Hashnode account, a Medium draft that never got published, a Notion page that I hated instantly. None of them stuck.
+I've had a few of these pages over the years but none of them stuck.
 
-The problem wasn't motivation. It was that none of those platforms felt like somewhere I'd actually want to write. Same layout, same gray palette, same card-based everything. They work fine, they just don't feel like anything.
+The problem wasn't entirely motivation. It was that none of current day platforms felt like somewhere I'd actually want to write. They all use the same layout, same gray palette, same card-based everything. It works fine, they just don't feel like anything.
 
 So I built this instead.
 
 ## Why retro
 
-Early web had something modern web lost: the sense that a real person made it. Not a SaaS product's opinionated theme... a person, with a color picker and too much free time, making a place that was unmistakably theirs.
+Early web had something modern web lost: the sense that a real person made it. Not a SaaS product's opinionated theme... somebody, with a color picker and too much free time, making a place that was unmistakably theirs.
 
 That's what I was going for here. CRT scanlines, neon on dark, window chrome on every card. The aesthetic is deliberate, not ironic. But it's still built on Astro, with semantic HTML, proper ARIA, and a Lighthouse score that doesn't embarrass me.
 
